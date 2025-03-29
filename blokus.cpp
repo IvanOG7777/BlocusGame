@@ -15,8 +15,8 @@ class Shapes { // class Shapes
 
         Shapes rotated90() const {
             std:: string rotatedName = this->name + " Rotated 90 degrees"; //references tha name within the current Shape
-            std:: vector<std::pair<int,int>> rotatedCoordinates = this->coordinates; //references and assigns the original coordinates to rotaed Coordinates
-            int minX = rotatedCoordinates[0].first, minY = rotatedCoordinates[0].second; // sets the current minX and minY to the first pair of coordinates within the vector of pairs
+            std:: vector<std::pair<int,int>> rotatedCoordinates; //creates a new vector of pairs to store values in
+            int minX = this->coordinates[0].first, minY = this->coordinates[0].second; // sets the current minX and minY to the first pair of coordinates within the vector of pairs
 
             for(const auto &pair : this->coordinates) { //cycle through the orifinal pairs
                 int xCoordniate = pair.second; // swap the y to x
@@ -156,7 +156,28 @@ int main() {
     //     std:: cin >> playerCount;
     // }
 
-    std:: map<std:: string, Shapes> shapes = initailizeShapes();
+    Shapes fShape("F Shape", std::vector<std::pair<int,int>>{
+        {1,1}, {0,1}, {1,0}, {1,2}, {2,2}
+    });
 
-    printShapes(shapes);
+    // Rotate it by 90° clockwise.
+    Shapes rotatedF = fShape.rotated90();
+
+    // Output original coordinates.
+    std::cout << "Original " << fShape.name << " coordinates:\n";
+    for (const auto &p : fShape.coordinates) {
+        std::cout << "(" << p.first << "," << p.second << ") ";
+    }
+    std::cout << "\n\n";
+
+    // Output rotated coordinates.
+    std::cout << "Rotated " << rotatedF.name << " coordinates:\n";
+    for (const auto &p : rotatedF.coordinates) {
+        std::cout << "(" << p.first << "," << p.second << ") ";
+    }
+    std::cout << "\n";
+
+    // std:: map<std:: string, Shapes> shapes = initailizeShapes();
+
+    // printShapes(shapes);
 }
