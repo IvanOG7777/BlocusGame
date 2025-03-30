@@ -2,6 +2,25 @@
 #include <vector>
 #include <map>
 
+class BoardGame {
+    public:
+        std:: vector<std::vector<int>> boardSize;
+
+        BoardGame() : boardSize() {}
+        BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
+
+        void printBoardMap () {
+            std:: vector<std::vector<int>> printableMap = this->boardSize;
+
+            for (const auto row : printableMap) {
+                for (const auto element : row) {
+                    std:: cout << element << " ";
+                }
+                std:: cout << std:: endl;
+            }
+        }
+};
+
 class Shapes { // class Shapes
     public:
         std:: string name; // enter shapes name
@@ -146,38 +165,6 @@ void printMap() {
 }
 
 int main() {
-    // int playerCount;
-    // std:: cout << "Enter player count: ";
-    // std:: cin >> playerCount;
-
-    // while (playerCount < 2 || playerCount > 4) {
-    //     std:: cout << "Game must have 2-4 players" << std:: endl;
-    //     std:: cout << "Enter player count: ";
-    //     std:: cin >> playerCount;
-    // }
-
-    Shapes fShape("F Shape", std::vector<std::pair<int,int>>{
-        {1,1}, {0,1}, {1,0}, {1,2}, {2,2}
-    });
-
-    // Rotate it by 90° clockwise.
-    Shapes rotatedF = fShape.rotated90();
-
-    // Output original coordinates.
-    std::cout << "Original " << fShape.name << " coordinates:\n";
-    for (const auto &p : fShape.coordinates) {
-        std::cout << "(" << p.first << "," << p.second << ") ";
-    }
-    std::cout << "\n\n";
-
-    // Output rotated coordinates.
-    std::cout << "Rotated " << rotatedF.name << " coordinates:\n";
-    for (const auto &p : rotatedF.coordinates) {
-        std::cout << "(" << p.first << "," << p.second << ") ";
-    }
-    std::cout << "\n";
-
-    // std:: map<std:: string, Shapes> shapes = initailizeShapes();
-
-    // printShapes(shapes);
+    BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
+    board.printBoardMap();
 }
