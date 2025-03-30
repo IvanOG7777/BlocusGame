@@ -68,57 +68,65 @@ class Shapes { // class Shapes
         
         return shape;
     }
+
+    void printAllShapes () { // we pass a reference value of shapes which is of type map and has a string key and type Shape
+
+        std:: map<std:: string, Shapes> shapes = this->initailizeShapes();
+
+        for (const auto &pair : shapes) { // for each pair in shapes ex: "Name", coordiante
+            const std:: string &shapeName = pair.first; // current shapes name
+            const Shapes &shape = pair.second; // reference a shape for the current Shape object within the shapes we passed in the function
+            std:: cout << std:: endl;
+    
+            // we are trying to find the largest x and y coordinate of the shape slist of coordinates
+            int maxX = 0, maxY = 0; // we get both maxes to 0
+            int minX = 0, minY = 0; // we get both mins to 0
+            for (const auto &coordinate : shape.coordinates) { // uisng the referenced shape above we loop through the current shapes list of coordinates
+                if (coordinate.first > maxX) maxX = coordinate.first; //checks if the current x coordinate is greater than maxX, if it is we update maxX
+                if (coordinate.second > maxY) maxY = coordinate.second; // checks if the current y coordinate is greates than maxY, if it is we update maxY
+                if (coordinate.first < minX) minX = coordinate.first; // checks if the current x coordinate is less than minX, if it is we update minX to that value
+                if (coordinate.second < minY) minY = coordinate.second; // checks if the current y coordinate is less than minY, if it is we update minY to that value
+            }
+    
+            std:: cout << shapeName << std:: endl;
+            std:: cout <<"---------";
+            std:: cout<< std:: endl;
+            // for this two for loops we are essentail checking if a coordinate exists within the coordinates in the current shape
+            for (int y = minY; y <= maxY; ++y) { // we loop from the smallest y value to largest, this is the rows
+                for (int x = minX; x <= maxX; ++x) { // we loop from the smallest x value to larges, this is the columns
+                    bool found = false; //temp bool to see if the coordinate exits sets it to false
+                    for (const auto& coord : shape.coordinates) { // coord checks through each of the pairs within the list of pairs in shapes coordinates
+                        if (coord.first == x && coord.second == y) { // if the x and y values in the current coordniate matches the x and y we found a pair
+                            found = true; // we set found to true
+                            break; //break of of this loop
+                        }
+                    }
+                    std::cout << (found ? "X" : " "); // prints X if true else " " if false
+                }
+                std::cout << std::endl; // end line for current coorniate
+            }
+            std:: cout << std::endl; // end line for the next shape
+    
+        }
+    }
+
+    void printSingleShape(std:: string shapeName) {
+        auto allShapes = this->initailizeShapes();
+
+        Shapes shape = allShapes[shapeName];
+
+        std:: cout << shape.name << std:: endl;
+        std:: cout << "---------" << std:: endl;
+    
+        for (const auto &pair : shape.coordinates) {
+            std:: cout << "(" << pair.first << "," << pair.second << ")";
+        }
+    
+        std:: cout << std:: endl;
+    }
 };
 
-void printAllShapes (const std:: map<std:: string, Shapes>&shapes) { // we pass a reference value of shapes which is of type map and has a string key and type Shape
 
-    for (const auto &pair : shapes) { // for each pair in shapes ex: "Name", coordiante
-        const std:: string &shapeName = pair.first; // current shapes name
-        const Shapes &shape = pair.second; // reference a shape for the current Shape object within the shapes we passed in the function
-        std:: cout << std:: endl;
-
-        // we are trying to find the largest x and y coordinate of the shape slist of coordinates
-        int maxX = 0, maxY = 0; // we get both maxes to 0
-        int minX = 0, minY = 0; // we get both mins to 0
-        for (const auto &coordinate : shape.coordinates) { // uisng the referenced shape above we loop through the current shapes list of coordinates
-            if (coordinate.first > maxX) maxX = coordinate.first; //checks if the current x coordinate is greater than maxX, if it is we update maxX
-            if (coordinate.second > maxY) maxY = coordinate.second; // checks if the current y coordinate is greates than maxY, if it is we update maxY
-            if (coordinate.first < minX) minX = coordinate.first; // checks if the current x coordinate is less than minX, if it is we update minX to that value
-            if (coordinate.second < minY) minY = coordinate.second; // checks if the current y coordinate is less than minY, if it is we update minY to that value
-        }
-
-        std:: cout << shapeName << std:: endl;
-        std:: cout <<"---------";
-        std:: cout<< std:: endl;
-        // for this two for loops we are essentail checking if a coordinate exists within the coordinates in the current shape
-        for (int y = minY; y <= maxY; ++y) { // we loop from the smallest y value to largest, this is the rows
-            for (int x = minX; x <= maxX; ++x) { // we loop from the smallest x value to larges, this is the columns
-                bool found = false; //temp bool to see if the coordinate exits sets it to false
-                for (const auto& coord : shape.coordinates) { // coord checks through each of the pairs within the list of pairs in shapes coordinates
-                    if (coord.first == x && coord.second == y) { // if the x and y values in the current coordniate matches the x and y we found a pair
-                        found = true; // we set found to true
-                        break; //break of of this loop
-                    }
-                }
-                std::cout << (found ? "X" : " "); // prints X if true else " " if false
-            }
-            std::cout << std::endl; // end line for current coorniate
-        }
-        std:: cout << std::endl; // end line for the next shape
-
-    }
-}
-
-void printSingleShape(Shapes &shape) {
-    std:: cout << shape.name << std:: endl;
-    std:: cout << "---------" << std:: endl;
-
-    for (const auto &pair : shape.coordinates) {
-        std:: cout << "(" << pair.first << "," << pair.second << ")";
-    }
-
-    std:: cout << std:: endl;
-}
 
 class BoardGame {
     public:
@@ -163,20 +171,26 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
 }
 
 int main() {
-    BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
-    board.printMap();
+    // BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
+    // board.printMap();
 
-    std:: cout << std:: endl;
-    std:: cout << std:: endl;
+    // std:: cout << std:: endl;
+    // std:: cout << std:: endl;
 
 
-    auto allShapes = Shapes().initailizeShapes();
+    // auto allShapes = Shapes().initailizeShapes();
 
-    Shapes fShape = allShapes["F Shape"];
+    // Shapes fShape = allShapes["F Shape"];
 
-    printSingleShape(fShape);
+    // printSingleShape(fShape);
 
-    fShape.rotated90();
+    // fShape.rotated90();
 
-    printSingleShape(fShape);
+    // printSingleShape(fShape);
+
+    Shapes shape;
+
+    shape.printSingleShape("F Shape");
+    
+
 }
