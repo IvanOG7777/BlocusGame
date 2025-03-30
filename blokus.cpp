@@ -2,25 +2,6 @@
 #include <vector>
 #include <map>
 
-class BoardGame {
-    public:
-        std:: vector<std::vector<int>> boardSize;
-
-        BoardGame() : boardSize() {}
-        BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
-
-        void printBoardMap () {
-            std:: vector<std::vector<int>> printableMap = this->boardSize;
-
-            for (const auto row : printableMap) {
-                for (const auto element : row) {
-                    std:: cout << element << " ";
-                }
-                std:: cout << std:: endl;
-            }
-        }
-};
-
 class Shapes { // class Shapes
     public:
         std:: string name; // enter shapes name
@@ -58,45 +39,38 @@ class Shapes { // class Shapes
             }
             return Shapes(rotatedName, rotatedCoordinates); //return the new name and rotated coordinates
         }
-
+        
+        std:: map<std:: string, Shapes> initailizeShapes() { // creates an initalizer for the shapes, we will return a map of string and type Shapes.
+        std:: map<std:: string, Shapes> shape; // create a map called shape that holds a string name key and a type strig
+        
+        //Shapes for the game
+        shape["Single"] = Shapes("Single", std::vector<std::pair<int,int>>{{0,0}}); // we make a key in shape called "Single" to be of type Shape with name "Single" and coordinates of 0,0
+        shape["Two"] = Shapes("Two", std::vector<std::pair<int,int>>{{0,0}, {1,0}});
+        shape["Three"] = Shapes("Three", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {2,0}});
+        shape["Square"] = Shapes("Square", std::vector<std::pair<int,int>>{{0,0},{0,1}, {1,0}, {1,1}});
+        shape["Short I"] = Shapes("Short I", std::vector<std::pair<int,int>>{{0,0}, {0,1}, {0,2}, {0,3}});
+        shape["Long I"] = Shapes("Long I", std::vector<std::pair<int,int>>{{0,0}, {0,1}, {0,2}, {0,3}, {0,4}});
+        shape["Big L"] = Shapes("Big L", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}, {0,3}});
+        shape["Short L"] = Shapes("Short L", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}});
+        shape["X Shape"] = Shapes("X Shape", std:: vector<std:: pair<int,int>>{{1,0},{0,1},{1,1},{2,1},{1,2}});
+        shape["Big T"] = Shapes("Big T", std:: vector<std:: pair<int,int>>{{1,0},{1,1}, {1,2},{0,2}, {2,2}});
+        shape["Short T"] = Shapes("Short T", std:: vector<std:: pair<int,int>>{{1,0},{1,1},{0,2},{2,2}});
+        shape["U Shape"] = Shapes("U Shape", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {2,0}, {0,1}, {2,1}});
+        shape["Y Shape"] = Shapes("Y Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{3,0},{1,1}});
+        shape["V Shape"] = Shapes("V Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{2,1},{2,2}});
+        shape["Short Z"] = Shapes("Short Z", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1}});
+        shape["Big Z"] = Shapes("Big Z", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {1,1}, {1,2}, {2,2}});
+        shape["P Shape"] = Shapes("P Shape", std:: vector<std:: pair<int,int>>{{0,0}, {0,1}, {0,2}, {1,1}, {2,2}});
+        shape["Mini L"] = Shapes("Mini L", std:: vector<std:: pair<int,int>>{{0,0},{0,1},{1,0}});
+        shape["N Shape"] = Shapes("N Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{3,1}});
+        shape["W Shape"] = Shapes("W Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{2,2}});
+        shape["F Shape"] = Shapes("F Shape", std:: vector<std::pair<int,int>>{{1,1},{0,1},{1,0},{1,2},{2,2}});
+        
+        return shape;
+    }
 };
 
-std:: map<std:: string, Shapes> initailizeShapes() { // creates an initalizer for the shapes, we will return a map of string and type Shapes.
-    std:: map<std:: string, Shapes> shape; // create a map called shape that holds a string name key and a type strig
-
-
-    //Shapes for the game
-    shape["Single"] = Shapes("Single", std::vector<std::pair<int,int>>{{0,0}}); // we make a key in shape called "Single" to be of type Shape with name "Single" and coordinates of 0,0
-    shape["Two"] = Shapes("Two", std::vector<std::pair<int,int>>{{0,0}, {1,0}});
-    shape["Three"] = Shapes("Three", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {2,0}});
-    shape["Square"] = Shapes("Square", std::vector<std::pair<int,int>>{{0,0},{0,1}, {1,0}, {1,1}});
-    shape["Short I"] = Shapes("Short I", std::vector<std::pair<int,int>>{{0,0}, {0,1}, {0,2}, {0,3}});
-    shape["Long I"] = Shapes("Long I", std::vector<std::pair<int,int>>{{0,0}, {0,1}, {0,2}, {0,3}, {0,4}});
-    shape["Big L"] = Shapes("Big L", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}, {0,3}});
-    shape["Short L"] = Shapes("Short L", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}});
-    shape["X Shape"] = Shapes("X Shape", std:: vector<std:: pair<int,int>>{{1,0},{0,1},{1,1},{2,1},{1,2}});
-    shape["Big T"] = Shapes("Big T", std:: vector<std:: pair<int,int>>{{1,0},{1,1}, {1,2},{0,2}, {2,2}});
-    shape["Short T"] = Shapes("Short T", std:: vector<std:: pair<int,int>>{{1,0},{1,1},{0,2},{2,2}});
-    shape["U Shape"] = Shapes("U Shape", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {2,0}, {0,1}, {2,1}});
-    shape["Y Shape"] = Shapes("Y Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{3,0},{1,1}});
-    shape["V Shape"] = Shapes("V Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{2,1},{2,2}});
-    shape["Short Z"] = Shapes("Short Z", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1}});
-    shape["Big Z"] = Shapes("Big Z", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {1,1}, {1,2}, {2,2}});
-    shape["P Shape"] = Shapes("P Shape", std:: vector<std:: pair<int,int>>{{0,0}, {0,1}, {0,2}, {1,1}, {2,2}});
-    shape["Mini L"] = Shapes("Mini L", std:: vector<std:: pair<int,int>>{{0,0},{0,1},{1,0}});
-    shape["N Shape"] = Shapes("N Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{3,1}});
-    shape["W Shape"] = Shapes("W Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{2,2}});
-    shape["F Shape"] = Shapes("F Shape", std:: vector<std::pair<int,int>>{{1,1},{0,1},{1,0},{1,2},{2,2}});
-
-
-
-    return shape;
-
-}
-
-
-
-void printShapes (const std:: map<std:: string, Shapes>&shapes) { // we pass a reference value of shapes which is of type map and has a string key and type Shape
+void printAllShapes (const std:: map<std:: string, Shapes>&shapes) { // we pass a reference value of shapes which is of type map and has a string key and type Shape
 
     for (const auto &pair : shapes) { // for each pair in shapes ex: "Name", coordiante
         const std:: string &shapeName = pair.first; // current shapes name
@@ -135,6 +109,42 @@ void printShapes (const std:: map<std:: string, Shapes>&shapes) { // we pass a r
     }
 }
 
+void printSingleShape(Shapes &shape) {
+    std:: cout << shape.name << std:: endl;
+    std:: cout << "---------" << std:: endl;
+
+    for (const auto &pair : shape.coordinates) {
+        std:: cout << "(" << pair.first << "," << pair.second << ")";
+    }
+
+    std:: cout << std:: endl;
+}
+
+class BoardGame {
+    public:
+        std:: vector<std::vector<int>> boardSize;
+
+        BoardGame() : boardSize() {}
+        BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
+
+        void printMap () {
+            std:: vector<std::vector<int>> printableMap = this->boardSize;
+
+            for (const auto row : printableMap) {
+                for (const auto element : row) {
+                    std:: cout << element << " ";
+                }
+                std:: cout << std:: endl;
+            }
+        }
+
+        void placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
+
+        }
+};
+
+
+
 std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
 
 void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
@@ -152,19 +162,21 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
    
 }
 
-void printMap() {
-    for (const auto row : gameMap) {
-        for (const auto element : row) {
-            std:: cout << element << " ";
-        }
-        std:: cout << std:: endl;
-    }
-
-    std:: cout << std:: endl;
-    std:: cout << std:: endl;
-}
-
 int main() {
     BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
-    board.printBoardMap();
+    board.printMap();
+
+    std:: cout << std:: endl;
+    std:: cout << std:: endl;
+
+
+    auto allShapes = Shapes().initailizeShapes();
+
+    Shapes fShape = allShapes["F Shape"];
+
+    printSingleShape(fShape);
+
+    fShape.rotated90();
+
+    printSingleShape(fShape);
 }
