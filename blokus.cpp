@@ -69,9 +69,9 @@ class Shapes { // class Shapes
         return shape;
     }
 
-    void printAllShapes () { // we pass a reference value of shapes which is of type map and has a string key and type Shape
+    void printAllShapes () {
 
-        std:: map<std:: string, Shapes> shapes = this->initailizeShapes();
+        std:: map<std:: string, Shapes> shapes = this->initailizeShapes(); //everytime we call print shape we reinitalize all shapes then cycle through them within the function
 
         for (const auto &pair : shapes) { // for each pair in shapes ex: "Name", coordiante
             const std:: string &shapeName = pair.first; // current shapes name
@@ -110,10 +110,13 @@ class Shapes { // class Shapes
         }
     }
 
-    void printSingleShape(std:: string shapeName) {
-        auto allShapes = this->initailizeShapes();
+    void printSingleShape(std:: string shapeName) { // we onyl pass the name of the shape.
+        auto &shapes = ShapesManager::getInstance().getShapeMap();
+        Shapes shape;
 
-        Shapes shape = allShapes[shapeName];
+        if (shapes.find(shapeName) != shapes.end()) {
+            shape = shapes.at(shapeName);
+        }
 
         std:: cout << shape.name << std:: endl;
         std:: cout << "---------" << std:: endl;
@@ -124,8 +127,31 @@ class Shapes { // class Shapes
     
         std:: cout << std:: endl;
     }
+
+    
 };
 
+class ShapesManager{
+    private:
+        std:: map<std:: string, Shapes> shapeMap;
+        ShapesManager() {
+            Shapes dummyShape;
+            shapeMap = dummyShape.initailizeShapes();
+        }
+
+        ShapesManager(const ShapesManager&) = delete;
+        ShapesManager& operator=(const ShapesManager&) = delete;
+
+    public:
+        static ShapesManager& getInstance() {
+            static ShapesManager instance;
+            return instance;
+        }
+
+        const std:: map<std:: string, Shapes> &getShapeMap() const {
+            return shapeMap;
+        }
+};
 
 
 class BoardGame {
@@ -171,26 +197,31 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
 }
 
 int main() {
-    // BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
-    // board.printMap();
+    BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
+    board.printMap();
 
-    // std:: cout << std:: endl;
-    // std:: cout << std:: endl;
+    std:: cout << std:: endl;
+    std:: cout << std:: endl;
 
 
-    // auto allShapes = Shapes().initailizeShapes();
+    auto allShapes = Shapes().initailizeShapes();
+    Shapes fShape = allShapes["F Shape"];
 
-    // Shapes fShape = allShapes["F Shape"];
+    fShape.printSingleShape("F Shape");
 
-    // printSingleShape(fShape);
+    fShape = fShape.rotated90();
 
-    // fShape.rotated90();
+    fShape.printSingleShape("F Shape");
 
-    // printSingleShape(fShape);
+    std:: cout << std:: endl;
+    std:: cout << std:: endl;
 
-    Shapes shape;
 
-    shape.printSingleShape("F Shape");
-    
+    const auto &shapes = ShapesManager::getInstance().getShapeMap();
+
+    if (shapes.find("F Shape") != shapes.end()) {
+        const Shapes &single = shapes.at("F Shape");
+    }
+
 
 }
