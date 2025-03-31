@@ -108,27 +108,7 @@ class Shapes { // class Shapes
             std:: cout << std::endl; // end line for the next shape
     
         }
-    }
-
-    void printSingleShape(std:: string shapeName) { // we onyl pass the name of the shape.
-        auto &shapes = ShapesManager::getInstance().getShapeMap();
-        Shapes shape;
-
-        if (shapes.find(shapeName) != shapes.end()) {
-            shape = shapes.at(shapeName);
-        }
-
-        std:: cout << shape.name << std:: endl;
-        std:: cout << "---------" << std:: endl;
-    
-        for (const auto &pair : shape.coordinates) {
-            std:: cout << "(" << pair.first << "," << pair.second << ")";
-        }
-    
-        std:: cout << std:: endl;
-    }
-
-    
+    }    
 };
 
 class ShapesManager{
@@ -177,6 +157,16 @@ class BoardGame {
         }
 };
 
+void printSingleShape(const Shapes &shape) {
+    std:: cout << shape.name << std:: endl;
+    std:: cout << "---------" << std:: endl;
+
+    for (const auto &pair : shape.coordinates) {
+        std:: cout << "(" << pair.first << "," << pair.second << ")";
+    }
+    std:: cout << std:: endl;
+}
+
 
 
 std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
@@ -197,31 +187,30 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
 }
 
 int main() {
-    BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
-    board.printMap();
+    // BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
+    // board.printMap();
 
-    std:: cout << std:: endl;
-    std:: cout << std:: endl;
+    // std:: cout << std:: endl;
+    // std:: cout << std:: endl;
 
 
-    auto allShapes = Shapes().initailizeShapes();
-    Shapes fShape = allShapes["F Shape"];
+    const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
 
-    fShape.printSingleShape("F Shape");
+    Shapes fShape = shapeMap.at("F Shape");
+
+    printSingleShape(fShape);
 
     fShape = fShape.rotated90();
 
-    fShape.printSingleShape("F Shape");
-
-    std:: cout << std:: endl;
-    std:: cout << std:: endl;
+    printSingleShape(fShape);
 
 
-    const auto &shapes = ShapesManager::getInstance().getShapeMap();
+    // const auto &shapes = ShapesManager::getInstance().getShapeMap();
 
-    if (shapes.find("F Shape") != shapes.end()) {
-        const Shapes &single = shapes.at("F Shape");
-    }
-
+    // if (shapes.find("F Shape") != shapes.end()) {
+    //     const Shapes &single = shapes.at("F Shape");
+    //     single.rotated90();
+    //     printSingleShape(single.name);
+    // }
 
 }
