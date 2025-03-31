@@ -108,19 +108,30 @@ class Shapes { // class Shapes
             std:: cout << std::endl; // end line for the next shape
     
         }
-    }    
+    }   
+    
+    void printSingleShape(const Shapes &shape) {
+        std:: cout << shape.name << std:: endl;
+        std:: cout << "---------" << std:: endl;
+    
+        for (const auto &pair : shape.coordinates) {
+            std:: cout << "(" << pair.first << "," << pair.second << ")";
+        }
+        std:: cout << std:: endl;
+    }
 };
 
+
 class ShapesManager{
-    private:
-        std:: map<std:: string, Shapes> shapeMap;
-        ShapesManager() {
-            Shapes dummyShape;
-            shapeMap = dummyShape.initailizeShapes();
+    protected:
+        std:: map<std:: string, Shapes> shapeMap; //create a map of string and Shapes called shape map. This is to store our initalized shapes
+        ShapesManager() { // Private constructor for the singleton
+            Shapes dummyShape; // creates an instance of Shapes called dummyShapes
+            shapeMap = dummyShape.initailizeShapes(); // we pass the initalized map of shapes from dummyShape to shapeMap
         }
 
-        ShapesManager(const ShapesManager&) = delete;
-        ShapesManager& operator=(const ShapesManager&) = delete;
+        ShapesManager(const ShapesManager&) = delete; // this is a copy contructor. But it is saying is we try to copy ex: ShapesManger a = b, delete the copy constructor
+        ShapesManager &operator= (const ShapesManager&) = delete; // // this is a assignment constructor. We are saying is we want to assign ex: a = b of type ShapesManager, you cant and deletes that process from happeing
 
     public:
         static ShapesManager& getInstance() {
@@ -157,16 +168,6 @@ class BoardGame {
         }
 };
 
-void printSingleShape(const Shapes &shape) {
-    std:: cout << shape.name << std:: endl;
-    std:: cout << "---------" << std:: endl;
-
-    for (const auto &pair : shape.coordinates) {
-        std:: cout << "(" << pair.first << "," << pair.second << ")";
-    }
-    std:: cout << std:: endl;
-}
-
 
 
 std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
@@ -198,19 +199,13 @@ int main() {
 
     Shapes fShape = shapeMap.at("F Shape");
 
-    printSingleShape(fShape);
+    fShape.printSingleShape(fShape);
 
     fShape = fShape.rotated90();
 
-    printSingleShape(fShape);
+    fShape.printSingleShape(fShape);
 
+    fShape = fShape.rotated90();
 
-    // const auto &shapes = ShapesManager::getInstance().getShapeMap();
-
-    // if (shapes.find("F Shape") != shapes.end()) {
-    //     const Shapes &single = shapes.at("F Shape");
-    //     single.rotated90();
-    //     printSingleShape(single.name);
-    // }
-
+    fShape.printSingleShape(fShape);
 }
