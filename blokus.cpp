@@ -149,28 +149,37 @@ class Shapes { // class Shapes
         std:: string flippedShapeName = this->name;
         std:: vector<std:: pair <int,int>> flippedCoordinates;
 
-        int maxX = this->coordinates[0].first, maxY = this->coordinates[0].second;
-        int minX = this->coordinates[0].first, minY = this->coordinates[0].second;
+        int maxX = this->coordinates[0].first;
+        int minX = this->coordinates[0].first;
         for (const auto &coord : this->coordinates) {
             if (coord.first > maxX) maxX = coord.first;
-            if (coord.second > maxY) maxY = coord.second;
             if (coord.first < minX) minX = coord.first;
-            if (coord.second < minY) minY = coord.second;
         }
+
+        for (const auto &pair : this->coordinates) {
+            int newX = maxX - pair.first;
+            flippedCoordinates.push_back({newX, pair.second});
+        }
+        return Shapes(flippedShapeName, flippedCoordinates);
     }
 
     Shapes flipShapeVertical() const {
         std:: string flippedShapeName = this->name;
         std:: vector<std:: pair<int,int>> flippedCoordinates;
 
-        int maxX = this->coordinates[0].first, maxY = this->coordinates[0].second;
-        int minX = this->coordinates[0].first, minY = this->coordinates[0].second;
+        int maxY = this->coordinates[0].second;
+        int minY = this->coordinates[0].second;
+
         for (const auto &coord : this->coordinates) {
-            if (coord.first > maxX) maxX = coord.first;
-            if (coord.second > maxY) maxY = coord.second;
-            if (coord.first < minX) minX = coord.first;
-            if (coord.second < minY) minY = coord.second;
+            if (coord.second > maxY) maxY = coord.first;
+            if (coord.second < minY) minY = coord.first;
         }
+
+        for (const auto &pair : this->coordinates) {
+            int newY = maxY - pair.second;
+            flippedCoordinates.push_back({pair.first, newY});
+        }
+        return Shapes(flippedShapeName, flippedCoordinates);
     }
 };
 
@@ -250,15 +259,38 @@ int main() {
 
     const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
 
-    Shapes fShape = shapeMap.at("F Shape");
+    // Shapes fShape = shapeMap.at("F Shape");
 
-    fShape.printSingleShape(fShape);
+    // fShape.printSingleShape(fShape);
 
-    fShape = fShape.rotated90();
+    // fShape = fShape.rotated90();
 
-    fShape.printSingleShape(fShape);
+    // fShape.printSingleShape(fShape);
 
-    fShape = fShape.rotated90();
+    // fShape = fShape.rotated90();
 
-    fShape.printSingleShape(fShape);
+    // fShape.printSingleShape(fShape);
+
+
+
+    // Shapes HorizontalNShape = shapeMap.at("N Shape");
+
+    // HorizontalNShape.printSingleShape(HorizontalNShape);
+    
+    // HorizontalNShape = HorizontalNShape.flipShapeHorizontal();
+
+    // HorizontalNShape.printSingleShape(HorizontalNShape);
+
+
+    Shapes VerticalNShape = shapeMap.at("N Shape");
+
+    VerticalNShape.printSingleShape(VerticalNShape);
+    
+    VerticalNShape = VerticalNShape.flipShapeVertical();
+
+    VerticalNShape.printSingleShape(VerticalNShape);
+
+
+
+
 }
