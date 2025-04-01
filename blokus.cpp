@@ -114,16 +114,69 @@ class Shapes { // class Shapes
         std:: cout << shape.name << std:: endl;
         std:: cout << "---------" << std:: endl;
     
+        std:: cout << "Shapes Coordinates: ";
         for (const auto &pair : shape.coordinates) {
             std:: cout << "(" << pair.first << "," << pair.second << ")";
         }
         std:: cout << std:: endl;
+
+        int maxX = 0, maxY = 0;
+        int minX = 0, minY = 0;
+        for (const auto &coordinate : shape.coordinates) {
+            if (coordinate.first > maxX) maxX = coordinate.first;
+            if (coordinate.second > maxY) maxY = coordinate.second;
+            if (coordinate.first < minX) minX = coordinate.first;
+            if (coordinate.second < minY) minY = coordinate.second;
+        }
+
+        for (int y = minY; y < maxY; ++y) {
+            for (int x = minX; x < maxX; ++x) {
+                bool found = false;
+                for (const auto &coord : shape.coordinates) {
+                    if (coord.first == x && coord.second == y) {
+                        found = true;
+                        break;
+                    }
+                }
+                std:: cout << (found ? "X" : " ");
+            }
+            std:: cout << std:: endl;
+        }
+        std:: cout << std:: endl;
+    }
+
+    Shapes flipShapeHorizontal() const {
+        std:: string flippedShapeName = this->name;
+        std:: vector<std:: pair <int,int>> flippedCoordinates;
+
+        int maxX = this->coordinates[0].first, maxY = this->coordinates[0].second;
+        int minX = this->coordinates[0].first, minY = this->coordinates[0].second;
+        for (const auto &coord : this->coordinates) {
+            if (coord.first > maxX) maxX = coord.first;
+            if (coord.second > maxY) maxY = coord.second;
+            if (coord.first < minX) minX = coord.first;
+            if (coord.second < minY) minY = coord.second;
+        }
+    }
+
+    Shapes flipShapeVertical() const {
+        std:: string flippedShapeName = this->name;
+        std:: vector<std:: pair<int,int>> flippedCoordinates;
+
+        int maxX = this->coordinates[0].first, maxY = this->coordinates[0].second;
+        int minX = this->coordinates[0].first, minY = this->coordinates[0].second;
+        for (const auto &coord : this->coordinates) {
+            if (coord.first > maxX) maxX = coord.first;
+            if (coord.second > maxY) maxY = coord.second;
+            if (coord.first < minX) minX = coord.first;
+            if (coord.second < minY) minY = coord.second;
+        }
     }
 };
 
 
 class ShapesManager{
-    protected:
+    protected: // Only this class will be able to access these constructors
         std:: map<std:: string, Shapes> shapeMap; //create a map of string and Shapes called shape map. This is to store our initalized shapes
         ShapesManager() { // Private constructor for the singleton
             Shapes dummyShape; // creates an instance of Shapes called dummyShapes
@@ -134,12 +187,12 @@ class ShapesManager{
         ShapesManager &operator= (const ShapesManager&) = delete; // // this is a assignment constructor. We are saying is we want to assign ex: a = b of type ShapesManager, you cant and deletes that process from happeing
 
     public:
-        static ShapesManager& getInstance() {
-            static ShapesManager instance;
-            return instance;
+        static ShapesManager& getInstance() { // Statis function that only returns the one and only instance created it can only be caalled without an object ex: ShapesManager &manager = ShapesManage::getInstance();
+            static ShapesManager instance; // Creates a static (single) instance of Shapes Manager within the fucntion. It is created once called and is resued everytime.
+            return instance; //returns a refernece of the instance of ShapesManager
         }
 
-        const std:: map<std:: string, Shapes> &getShapeMap() const {
+        const std:: map<std:: string, Shapes> &getShapeMap() const { //creates a map of string and Shapes called shapeMap. This is read only and constant so we cant change it
             return shapeMap;
         }
 };
