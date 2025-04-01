@@ -211,11 +211,17 @@ class BoardGame {
     public:
         std:: vector<std::vector<int>> boardSize;
 
-        BoardGame() : boardSize() {}
-        BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
+        // BoardGame() : boardSize() {std:: cout << "No Size passed for the game" << std:: endl;}
+        // BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
 
-        void printMap () {
-            std:: vector<std::vector<int>> printableMap = this->boardSize;
+        std:: vector<std:: vector<int>> initailizeMap() {
+            std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
+
+            return gameMap;
+        }
+
+        void printMap (BoardGame &gameMap) {
+            std:: vector<std::vector<int>> printableMap = this->initailizeMap();
 
             for (const auto row : printableMap) {
                 for (const auto element : row) {
@@ -229,6 +235,16 @@ class BoardGame {
 
         }
 };
+
+
+// class BoardGameManager {
+//     protected:
+//         std:: vector<std:: vector<int>> boardSize;
+//         BoardGameManager() {
+//             BoardGame dummyBoardGame;
+//             boardSize = dummyBoardGame;
+//         }
+// };
 
 
 
@@ -250,47 +266,44 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
 }
 
 int main() {
-    // BoardGame board(std:: vector<std:: vector<int>>(20, std:: vector<int>(20,0)));
-    // board.printMap();
+    BoardGame board;
+    board.initailizeMap();
+    board.printMap(board);
 
-    // std:: cout << std:: endl;
-    // std:: cout << std:: endl;
-
-
-    const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
-
-    // Shapes fShape = shapeMap.at("F Shape");
-
-    // fShape.printSingleShape(fShape);
-
-    // fShape = fShape.rotated90();
-
-    // fShape.printSingleShape(fShape);
-
-    // fShape = fShape.rotated90();
-
-    // fShape.printSingleShape(fShape);
+    std:: cout << std:: endl;
+    std:: cout << std:: endl;
 
 
+    // const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
 
-    // Shapes HorizontalNShape = shapeMap.at("N Shape");
+    // // Shapes fShape = shapeMap.at("F Shape");
 
-    // HorizontalNShape.printSingleShape(HorizontalNShape);
+    // // fShape.printSingleShape(fShape);
+
+    // // fShape = fShape.rotated90();
+
+    // // fShape.printSingleShape(fShape);
+
+    // // fShape = fShape.rotated90();
+
+    // // fShape.printSingleShape(fShape);
+
+
+
+    // // Shapes HorizontalNShape = shapeMap.at("N Shape");
+
+    // // HorizontalNShape.printSingleShape(HorizontalNShape);
     
-    // HorizontalNShape = HorizontalNShape.flipShapeHorizontal();
+    // // HorizontalNShape = HorizontalNShape.flipShapeHorizontal();
 
-    // HorizontalNShape.printSingleShape(HorizontalNShape);
+    // // HorizontalNShape.printSingleShape(HorizontalNShape);
 
 
-    Shapes VerticalNShape = shapeMap.at("N Shape");
+    // // Shapes VerticalNShape = shapeMap.at("N Shape");
 
-    VerticalNShape.printSingleShape(VerticalNShape);
+    // // VerticalNShape.printSingleShape(VerticalNShape);
     
-    VerticalNShape = VerticalNShape.flipShapeVertical();
+    // // VerticalNShape = VerticalNShape.flipShapeVertical();
 
-    VerticalNShape.printSingleShape(VerticalNShape);
-
-
-
-
+    // // VerticalNShape.printSingleShape(VerticalNShape);
 }
