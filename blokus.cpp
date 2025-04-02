@@ -211,8 +211,9 @@ class BoardGame {
     public:
         std:: vector<std::vector<int>> boardSize;
 
-        // BoardGame() : boardSize() {std:: cout << "No Size passed for the game" << std:: endl;}
-        // BoardGame(const std:: vector<std::vector<int>> &passedSize) : boardSize(passedSize) {}
+        BoardGame() {
+            boardSize = initailizeMap();
+        }
 
         std:: vector<std:: vector<int>> initailizeMap() {
             std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
@@ -220,10 +221,8 @@ class BoardGame {
             return gameMap;
         }
 
-        void printMap (BoardGame &gameMap) {
-            std:: vector<std::vector<int>> printableMap = this->initailizeMap();
-
-            for (const auto row : printableMap) {
+        void printMap () {
+            for (const auto row : boardSize) {
                 for (const auto element : row) {
                     std:: cout << element << " ";
                 }
@@ -246,19 +245,22 @@ class BoardGame {
             }
 
             for (auto &pair : shapesCoordinates) {
-                if (pair.first < 0 || pair.second >= 20 || pair.second < 0 || pair.second >= 20) {
-                    std:: cerr << "One or more x/y coordinates is out of bounds" << std:: endl;
+                if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
+                    std:: cerr << "One or more x/y coordinates are out of bounds" << std:: endl;
                     std:: cerr << "Cant place the piece at desired coordinate" << std:: endl;
-                    return
+                    return;
+                } else if (boardSize[pair.first][pair.second] == 0) {
+
+                } else {
+                    std:: cerr << "A cell within the coordinates is taken or shape is out of bounds" << std:: endl;
+                    return;
                 }
             }
 
-            for (auto &pair : shapesCoordinates) {
-                if (gameMap[pair.first][pair.second] == 0) {
-                    gameMap[pair.first][pair.second] = currentPlayer;
-                }
+            for(auto &pair : shapesCoordinates) {
+                boardSize[pair.first][pair.second] = currentPlayer;
             }
-
+            std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl;
         }
 };
 
@@ -294,42 +296,15 @@ void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
 int main() {
     BoardGame board;
     board.initailizeMap();
-    board.printMap(board);
+    board.printMap();
 
-    std:: cout << std:: endl;
-    std:: cout << std:: endl;
+    auto shapesMap = ShapesManager::getInstance().getShapeMap();
+    Shapes fShape = shapesMap.at("F Shape");
+    Shapes nShape = shapesMap.at("N Shape");
 
+    board.placePiece(fShape, 5,3,1);
 
-    const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
+    board.placePiece(nShape, 12,3,2);
 
-    Shapes fShape = shapeMap.at("F Shape");
-
-    // // fShape.printSingleShape(fShape);
-
-    // // fShape = fShape.rotated90();
-
-    // // fShape.printSingleShape(fShape);
-
-    // // fShape = fShape.rotated90();
-
-    // // fShape.printSingleShape(fShape);
-
-
-
-    // // Shapes HorizontalNShape = shapeMap.at("N Shape");
-
-    // // HorizontalNShape.printSingleShape(HorizontalNShape);
-    
-    // // HorizontalNShape = HorizontalNShape.flipShapeHorizontal();
-
-    // // HorizontalNShape.printSingleShape(HorizontalNShape);
-
-
-    // // Shapes VerticalNShape = shapeMap.at("N Shape");
-
-    // // VerticalNShape.printSingleShape(VerticalNShape);
-    
-    // // VerticalNShape = VerticalNShape.flipShapeVertical();
-
-    // // VerticalNShape.printSingleShape(VerticalNShape);
+    board.printMap();
 }
