@@ -231,7 +231,33 @@ class BoardGame {
             }
         }
 
-        void placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
+        void placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
+            if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
+                std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
+                std:: cerr << "X and Y coordinate must be within the 20x20 grid square" << std:: endl;
+                return;
+            }
+
+            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates;
+
+            for ( auto &pair : shapesCoordinates) { // add the x and y coordinates to the corrdinates of the Shapes object that was passed
+                pair.first += xCoordinate;
+                pair.second += yCoordinate;
+            }
+
+            for (auto &pair : shapesCoordinates) {
+                if (pair.first < 0 || pair.second >= 20 || pair.second < 0 || pair.second >= 20) {
+                    std:: cerr << "One or more x/y coordinates is out of bounds" << std:: endl;
+                    std:: cerr << "Cant place the piece at desired coordinate" << std:: endl;
+                    return
+                }
+            }
+
+            for (auto &pair : shapesCoordinates) {
+                if (gameMap[pair.first][pair.second] == 0) {
+                    gameMap[pair.first][pair.second] = currentPlayer;
+                }
+            }
 
         }
 };
@@ -274,9 +300,9 @@ int main() {
     std:: cout << std:: endl;
 
 
-    // const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
+    const auto &shapeMap = ShapesManager::getInstance().getShapeMap();
 
-    // // Shapes fShape = shapeMap.at("F Shape");
+    Shapes fShape = shapeMap.at("F Shape");
 
     // // fShape.printSingleShape(fShape);
 
