@@ -110,76 +110,72 @@ class Shapes { // class Shapes
         }
     }   
     
-    void printSingleShape(const Shapes &shape) {
-        std:: cout << shape.name << std:: endl;
+    void printSingleShape(const Shapes &shape) { // passes instance of Shapes Onject
+        std:: cout << shape.name << std:: endl; // prints shapes name
         std:: cout << "---------" << std:: endl;
     
         std:: cout << "Shapes Coordinates: ";
         for (const auto &pair : shape.coordinates) {
-            std:: cout << "(" << pair.first << "," << pair.second << ")";
+            std:: cout << "(" << pair.first << "," << pair.second << ")"; // prints all pairs of x and y within the vector of coordinates
         }
         std:: cout << std:: endl;
 
+        //setting the min and max x and y values to 0
         int maxX = 0, maxY = 0;
         int minX = 0, minY = 0;
-        for (const auto &coordinate : shape.coordinates) {
+        for (const auto &coordinate : shape.coordinates) { // find the smallest x and y values within all pairs in the vector
             if (coordinate.first > maxX) maxX = coordinate.first;
             if (coordinate.second > maxY) maxY = coordinate.second;
             if (coordinate.first < minX) minX = coordinate.first;
             if (coordinate.second < minY) minY = coordinate.second;
         }
 
-        for (int y = minY; y < maxY; ++y) {
-            for (int x = minX; x < maxX; ++x) {
-                bool found = false;
-                for (const auto &coord : shape.coordinates) {
-                    if (coord.first == x && coord.second == y) {
-                        found = true;
-                        break;
+        for (int y = minY; y < maxY; ++y) { // y is for the row, goes from smallest y to largest y
+            for (int x = minX; x < maxX; ++x) { //x is for the columns, goes from smallest x to largest x
+                bool found = false; // temp bool to 
+                for (const auto &coord : shape.coordinates) { // cycles through all pairs in the vector
+                    if (coord.first == x && coord.second == y) { // if the x in coord and y in coord are equal to the x and y within the loops
+                        found = true; // we found a match and set found to true 
+                        break; // break out of the loop
                     }
                 }
-                std:: cout << (found ? "X" : " ");
+                std:: cout << (found ? "X" : " "); // if found it true we print X else a space
             }
-            std:: cout << std:: endl;
+            std:: cout << std:: endl; // end line for the next line in the shape
         }
-        std:: cout << std:: endl;
+        std:: cout << std:: endl; // end line for the complete shape
     }
 
     Shapes flipShapeHorizontal() const {
-        std:: string flippedShapeName = this->name;
-        std:: vector<std:: pair <int,int>> flippedCoordinates;
+        std:: string flippedShapeName = this->name; // get the shapes name
+        std:: vector<std:: pair <int,int>> flippedCoordinates; // creates new vector of pairs to hold flipped coordinates
 
-        int maxX = this->coordinates[0].first;
-        int minX = this->coordinates[0].first;
-        for (const auto &coord : this->coordinates) {
-            if (coord.first > maxX) maxX = coord.first;
-            if (coord.first < minX) minX = coord.first;
+        int maxX = this->coordinates[0].first; //initalizes maxX to the shapes first pair x value
+        for (const auto &coord : this->coordinates) { // for loop to find the smallest and largest x values within all pairs
+            if (coord.first > maxX) maxX = coord.first; // if cuurent x value in pair is greater then previous maxX swap the values
         }
 
-        for (const auto &pair : this->coordinates) {
-            int newX = maxX - pair.first;
-            flippedCoordinates.push_back({newX, pair.second});
+        for (const auto &pair : this->coordinates) { // cycles through the pairs in vector again
+            int newX = maxX - pair.first; // new x value is equal to the cuurent maxX - current x value in the pair
+            flippedCoordinates.push_back({newX, pair.second}); // push the newX and same y to the vector of pairs in flippedCoordinates
         }
-        return Shapes(flippedShapeName, flippedCoordinates);
+        return Shapes(flippedShapeName, flippedCoordinates); // returns the flipped coordinates
     }
 
     Shapes flipShapeVertical() const {
-        std:: string flippedShapeName = this->name;
-        std:: vector<std:: pair<int,int>> flippedCoordinates;
+        std:: string flippedShapeName = this->name; // gets the shapes name
+        std:: vector<std:: pair<int,int>> flippedCoordinates; // creates new vector of pairs to hold flipped coordinates
 
-        int maxY = this->coordinates[0].second;
-        int minY = this->coordinates[0].second;
-
-        for (const auto &coord : this->coordinates) {
-            if (coord.second > maxY) maxY = coord.first;
-            if (coord.second < minY) minY = coord.first;
+        int maxY = this->coordinates[0].second; // sets the maxY to the first y value in the the first pair of the shapes coordinates
+        for (const auto &coord : this->coordinates) { // for each loop to find largest Y value in all pairs
+            if (coord.second > maxY) maxY = coord.first; // changes maxY to another y value if its larger
         }
 
-        for (const auto &pair : this->coordinates) {
-            int newY = maxY - pair.second;
-            flippedCoordinates.push_back({pair.first, newY});
+        for (const auto &pair : this->coordinates) { // cycles through pairs again
+            int newY = maxY - pair.second; // newY is equal to the maxY - current y in the pair
+            flippedCoordinates.push_back({pair.first, newY}); // pushes back the original x and newY for all pairs
         }
-        return Shapes(flippedShapeName, flippedCoordinates);
+        return Shapes(flippedShapeName, flippedCoordinates); // returns the flipped coordinates
     }
 };
 
@@ -209,22 +205,23 @@ class ShapesManager{
 
 class BoardGame {
     public:
-        std:: vector<std::vector<int>> boardSize;
+        std:: vector<std::vector<int>> boardSize; // creats a vecotr of vector of ints call boardSize
 
-        BoardGame() {
-            boardSize = initailizeMap();
+        BoardGame() { // constructor to initalize the boardSize
+            boardSize = initailizeMap(); // sets boardSize to initalizeMap() function
         }
 
-        std:: vector<std:: vector<int>> initailizeMap() {
-            std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
+        std:: vector<std:: vector<int>> initailizeMap() { // function to create a vector of vector of ints called initalizeMap
+            std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0)); //creates a 20x20 map and sets all values to 0
 
-            return gameMap;
+            return gameMap; // return the map
         }
 
-        void printMap () {
-            for (const auto row : boardSize) {
-                for (const auto element : row) {
-                    if (element == 1) {
+        void printMap () { // print map fucntion
+            for (const auto row : boardSize) { // gets the current row
+                for (const auto element : row) { // cycles through all elements in that row (20)
+                    // if and else statments for players current number to print different colored shapes
+                    if (element == 1) { 
                         std:: cout << "\033[31m" << element << "\033[0m" << " ";
                     } else if (element == 2) {
                         std:: cout << "\033[32m" << element << "\033[0m" << " ";
@@ -247,19 +244,19 @@ class BoardGame {
                 return;
             }
 
-            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates;
+            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates; // creates a new vector of pairs called shapes coordinates and sets the passes shapes coordinates to it
 
-            for ( auto &pair : shapesCoordinates) { // add the x and y coordinates to the corrdinates of the Shapes object that was passed
+            for ( auto &pair : shapesCoordinates) { // add the x and y coordinates of where the user wants to place the piece to all x and y coordinates of all pairs in the the shapes coordinates
                 pair.first += xCoordinate;
                 pair.second += yCoordinate;
             }
 
-            for (auto &pair : shapesCoordinates) {
+            for (auto &pair : shapesCoordinates) { // boundry checker to see if the new chapes coordinates are in bounds of the 20x20 map
                 if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
                     std:: cerr << "One or more x/y coordinates are out of bounds" << std:: endl;
                     std:: cerr << "Cant place the piece at desired coordinate" << std:: endl;
                     return;
-                } else if (boardSize[pair.first][pair.second] == 0) {
+                } else if (boardSize[pair.first][pair.second] == 0) { // hoenstly forgot what this line does
 
                 } else {
                     std:: cerr << "A cell within the coordinates is taken or shape is out of bounds" << std:: endl;
@@ -267,10 +264,11 @@ class BoardGame {
                 }
             }
 
-            for(auto &pair : shapesCoordinates) {
-                boardSize[pair.first][pair.second] = currentPlayer;
+            // finally if the shpes coordinates are within the bounds we can place it
+            for(auto &pair : shapesCoordinates) { // cycles through the pairs of coodinates
+                boardSize[pair.first][pair.second] = currentPlayer; // the board at the current x and y value coordniates is equal to the players number
             }
-            std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl;
+            std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl; // checker messege to see that piece has been placef
         }
 };
 
