@@ -224,7 +224,17 @@ class BoardGame {
         void printMap () {
             for (const auto row : boardSize) {
                 for (const auto element : row) {
-                    std:: cout << element << " ";
+                    if (element == 1) {
+                        std:: cout << "\033[31m" << element << "\033[0m" << " ";
+                    } else if (element == 2) {
+                        std:: cout << "\033[32m" << element << "\033[0m" << " ";
+                    } else if (element == 3) {
+                        std:: cout << "\033[33m" << element << "\033[0m" << " ";
+                    } else if (element == 4) {
+                        std:: cout << "\033[34m" << element << "\033[0m" << " ";
+                    } else {
+                        std:: cout << element << " ";
+                    }
                 }
                 std:: cout << std:: endl;
             }
@@ -301,10 +311,16 @@ int main() {
     auto shapesMap = ShapesManager::getInstance().getShapeMap();
     Shapes fShape = shapesMap.at("F Shape");
     Shapes nShape = shapesMap.at("N Shape");
+    Shapes bigTShape = shapesMap.at("Big T");
+    Shapes pShape = shapesMap.at("P Shape");
 
     board.placePiece(fShape, 5,3,1);
 
     board.placePiece(nShape, 12,3,2);
+
+    board.placePiece(bigTShape, 10,4, 3);
+
+    board.placePiece(pShape, 16, 16, 4);
 
     board.printMap();
 }
