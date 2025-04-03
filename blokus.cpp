@@ -275,34 +275,6 @@ class BoardGame {
 };
 
 
-// class BoardGameManager {
-//     protected:
-//         std:: vector<std:: vector<int>> boardSize;
-//         BoardGameManager() {
-//             BoardGame dummyBoardGame;
-//             boardSize = dummyBoardGame;
-//         }
-// };
-
-
-
-std:: vector<std:: vector<int>> gameMap (20, std:: vector<int>(20, 0));
-
-void updateMap(int xCoordinate, int yCoordinate, int playerNumber) {
-    if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) {
-        std:: cout << "Invalid Coordinates" << std:: endl;
-        return;
-    }
-
-    if (gameMap[yCoordinate][xCoordinate] != 0) {
-        std:: cout << "Cell is taken or out of bounds" << std:: endl;
-        return;
-    }
-    gameMap[yCoordinate][xCoordinate] = playerNumber;
-
-   
-}
-
 int main() {
     BoardGame board;
     board.initailizeMap();
@@ -312,6 +284,7 @@ int main() {
     Shapes fShape = shapesMap.at("F Shape");
     Shapes nShape = shapesMap.at("N Shape");
     Shapes bigTShape = shapesMap.at("Big T");
+    bigTShape = bigTShape.rotated90();
     Shapes pShape = shapesMap.at("P Shape");
 
     board.placePiece(fShape, 5,3,1);
