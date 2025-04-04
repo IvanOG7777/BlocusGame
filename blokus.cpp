@@ -1,6 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <conio.h>
+#include <windows.h>
+#undef max
+#undef min
 
 class Shapes { // class Shapes
     public:
@@ -253,13 +257,15 @@ class BoardGame {
 
             for (auto &pair : shapesCoordinates) { // boundry checker to see if the new chapes coordinates are in bounds of the 20x20 map
                 if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
-                    std:: cerr << "One or more x/y coordinates are out of bounds" << std:: endl;
+                    std:: cerr << shape.name << " cannot be placed. One or more x/y coordinates are out of bounds" << std:: endl;
                     std:: cerr << "Cant place the piece at desired coordinate" << std:: endl;
+                    std:: cout << std:: endl;
                     return;
                 } else if (boardSize[pair.first][pair.second] == 0) { // hoenstly forgot what this line does
 
                 } else {
                     std:: cerr << "A cell within the coordinates is taken or shape is out of bounds" << std:: endl;
+                    std:: cout << std:: endl;
                     return;
                 }
             }
@@ -268,7 +274,8 @@ class BoardGame {
             for(auto &pair : shapesCoordinates) { // cycles through the pairs of coodinates
                 boardSize[pair.first][pair.second] = currentPlayer; // the board at the current x and y value coordniates is equal to the players number
             }
-            std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl; // checker messege to see that piece has been placef
+            std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl; // checker messege to see that piece has been placed
+            std:: cout << std:: endl;
         }
 };
 
@@ -276,22 +283,25 @@ class BoardGame {
 int main() {
     BoardGame board;
     board.initailizeMap();
-    board.printMap();
 
     auto shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes fShape = shapesMap.at("F Shape");
+    Shapes single = shapesMap.at("Single");
     Shapes nShape = shapesMap.at("N Shape");
     Shapes bigTShape = shapesMap.at("Big T");
     bigTShape = bigTShape.rotated90();
     Shapes pShape = shapesMap.at("P Shape");
+    Shapes square = shapesMap.at("Square");
 
-    board.placePiece(fShape, 5,3,1);
+    board.placePiece(single, 0,0,1);
+    board.placePiece(square, 18,0,2);
+    board.placePiece(single, 0,19,3);
+    board.placePiece(single, 19,19,4);
 
-    board.placePiece(nShape, 12,3,2);
+    // board.placePiece(nShape, 19,0,2);
 
-    board.placePiece(bigTShape, 10,4, 3);
+    // board.placePiece(bigTShape, 0,19, 3);
 
-    board.placePiece(pShape, 16, 16, 4);
+    // board.placePiece(pShape, 19, 19, 4);
 
     board.printMap();
 }
