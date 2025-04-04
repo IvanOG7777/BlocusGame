@@ -2,8 +2,8 @@
 #include <vector>
 #include <conio.h>   // for _getch() — get keypress instantly
 #include <windows.h> // for system("cls") — clear the terminal
-#undef max // remove Windows macro that conflicts with std::max
-#undef min // remove Windows macro that conflicts with std::min
+#undef max // removes the Windows macro that conflicts with std::max
+#undef min // removes the Windows macro that conflicts with std::min
 
 void drawMap(const std::vector<std::vector<int>>& map, int px, int py) { // passes the vector of vector of ints and the x and y coordinates that will be passed
     system("cls"); // Clears the terminal aka screen

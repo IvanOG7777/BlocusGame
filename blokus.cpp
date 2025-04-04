@@ -241,6 +241,39 @@ class BoardGame {
             }
         }
 
+        void newPrintMap(const std::vector<std::vector<int>>& board, const Shapes &shape, int xCoord, int yCoord, int playerNumber) {
+             auto tempBoard = board;
+
+             std:: vector<std:: pair<int,int>> absoluteCoordinates;
+
+             for (const auto pair : shape.coordinates) {
+                int newX = pair.first + xCoord;
+                int newY = pair.second + yCoord;
+
+                if (newX >= 0 && newX < static_cast<int>(board[0].size()) &&
+                    newY >= 0 && newY < static_cast<int>(board.size())) {
+                        absoluteCoordinates.push_back({newX, newY});
+                    }
+             }
+
+             for (const auto &pair : absoluteCoordinates) {
+                tempBoard[pair.second][pair.first] = playerNumber;
+             }
+
+             system("cls");
+
+             for (const auto &row : tempBoard) {
+                for (const auto &cell : row) {
+                    if (cell == playerNumber) {
+                        std::cout << "\033[32m" << cell << "\033[0m" << " ";
+                    } else {
+                        std:: cout << cell << " ";
+                    }
+                }
+                std:: cout << std:: endl;
+             }
+        }
+
         void placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
             if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
                 std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
@@ -281,27 +314,74 @@ class BoardGame {
 
 
 int main() {
+    // BoardGame board;
+    // board.initailizeMap();
+
+    // auto shapesMap = ShapesManager::getInstance().getShapeMap();
+    // Shapes single = shapesMap.at("Single");
+    // Shapes nShape = shapesMap.at("N Shape");
+    // Shapes bigTShape = shapesMap.at("Big T");
+    // bigTShape = bigTShape.rotated90();
+    // Shapes pShape = shapesMap.at("P Shape");
+    // Shapes square = shapesMap.at("Square");
+
+    // board.placePiece(single, 0,0,1);
+    // board.placePiece(square, 18,0,2);
+    // board.placePiece(single, 0,19,3);
+    // board.placePiece(single, 19,19,4);
+
+    // // board.placePiece(nShape, 19,0,2);
+
+    // // board.placePiece(bigTShape, 0,19, 3);
+
+    // // board.placePiece(pShape, 19, 19, 4);
+
+    // board.printMap();
+
     BoardGame board;
-    board.initailizeMap();
 
-    auto shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes single = shapesMap.at("Single");
-    Shapes nShape = shapesMap.at("N Shape");
-    Shapes bigTShape = shapesMap.at("Big T");
-    bigTShape = bigTShape.rotated90();
-    Shapes pShape = shapesMap.at("P Shape");
-    Shapes square = shapesMap.at("Square");
+    const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
+    Shapes currentShape = shapesMap.at("F Shape");
 
-    board.placePiece(single, 0,0,1);
-    board.placePiece(square, 18,0,2);
-    board.placePiece(single, 0,19,3);
-    board.placePiece(single, 19,19,4);
+    int currentPlayer = 1;
 
-    // board.placePiece(nShape, 19,0,2);
+    int offSetX = 0;
+    int offSetY = 0;
 
-    // board.placePiece(bigTShape, 0,19, 3);
+    bool confirmed = false;
 
-    // board.placePiece(pShape, 19, 19, 4);
-
+    while (!confirmed) {
+        // Show preview on the current board with the ghost shape overlay
+        board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
+        
+        // Capture arrow key input (using _getch() from conio.h)
+        int ch = _getch();
+        if (ch == 224) { // Arrow key prefix on Windows
+            int arrow = _getch();
+            switch (arrow) {
+                case 72: // Up arrow
+                    offSetY = std:: max(0, offSetY - 1);
+                    break;
+                case 80: // Down arrow
+                    offSetY = std::min(19, offSetY + 1);
+                    break;
+                case 75: // Left arrow
+                    offSetX = std:: max(0, offSetX - 1);
+                    break;
+                case 77: // Right arrow
+                    offSetX = std:: min(19, offSetX + 1);
+                    break;
+            }
+        } else if (ch == 13) { // Enter key
+            confirmed = true;
+        } else if (ch == 'q' || ch == 'Q') { // Quit
+            return 0;
+        }
+    }
+    
+    // Once confirmed, place the piece permanently
+    board.placePiece(currentShape, offSetX, offSetY, currentPlayer);
+    
+    // Print the final board state
     board.printMap();
 }
