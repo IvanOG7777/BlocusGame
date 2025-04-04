@@ -242,35 +242,74 @@ class BoardGame {
         }
 
         void newPrintMap(const std::vector<std::vector<int>>& board, const Shapes &shape, int xCoord, int yCoord, int playerNumber) {
-             auto tempBoard = board;
+             auto tempBoard = board; // creates a temp board 
 
-             std:: vector<std:: pair<int,int>> absoluteCoordinates;
+             std:: vector<std:: pair<int,int>> absoluteCoordinates; // vector of pairs to hold absolute coordinates of the shape
 
-             for (const auto pair : shape.coordinates) {
-                int newX = pair.first + xCoord;
-                int newY = pair.second + yCoord;
+             // initalizes the max and min of x and y values for out width check for the current shape
+             int maxX = 0, maxY = 0;
+             int minX = 0, minY = 0;
+             // initializes the shapes width and height to 0
+             int shapeWidth = 0, shapeHeight = 0;
 
-                if (newX >= 0 && newX < static_cast<int>(board[0].size()) &&
-                    newY >= 0 && newY < static_cast<int>(board.size())) {
-                        absoluteCoordinates.push_back({newX, newY});
+             int boardWidth = static_cast<int>(board[0].size()); // gets the board width, 19
+             int boardHeight = static_cast<int>(board.size()); // gets the board height 19
+
+             for (auto &pair : shape.coordinates) { // cycles through the pairs to find the smallest x and y values of the all the pairs
+                if (pair.first > maxX) maxX = pair.first;
+                if (pair.first < minX) minX = pair.first;
+                if (pair.second > maxY) maxY = pair.second;
+                if (pair.second < minY) minY = pair.second;
+             }
+
+             //getting the shapes width and height
+             shapeWidth = maxX - minX + 1;
+             shapeHeight = maxY - minY + 1;
+
+             //calculates the max x and y off sets based on the boards width - shapes width and boards height - shapes height
+             int maxXOffSet = boardWidth - shapeWidth;
+             int maxYOffSet = boardHeight - shapeHeight;
+
+             // if statements to adjust the x and y coordinates
+             if (xCoord < 0) {
+                xCoord = 0;
+             } else if (xCoord > maxXOffSet) {
+                xCoord = maxXOffSet;
+             }
+
+             if (yCoord < 0) {
+                yCoord = 0;
+             } else if (yCoord > maxYOffSet) {
+                yCoord = maxYOffSet;
+             }
+
+             for (const auto pair : shape.coordinates) { // for loop to find the absulute coordinates 
+                int newX = pair.first + xCoord; //adds the passed x value to the current pairs x valuie
+                int newY = pair.second + yCoord; // adds the passed y value to the current pairs y value
+
+                // boundry checker for the coordinates to see if they are within the boundry of the map
+                if (newX >= 0 && newX < static_cast<int>(board[0].size()) && // if the newX is NOT negative and if the newX is less than 19 (0-19 index)
+                    newY >= 0 && newY < static_cast<int>(board.size())) { // AND if the newY is NOT negative and if the newY is less than 19 (0-19 index)
+                        absoluteCoordinates.push_back({newX, newY}); // if conditions above pass, pass the coordinates to the new vector of pairs absolute coordinates
                     }
              }
 
-             for (const auto &pair : absoluteCoordinates) {
-                tempBoard[pair.second][pair.first] = playerNumber;
+             for (const auto &pair : absoluteCoordinates) { // goes through the absoluteCoordinates vector of pairs
+                tempBoard[pair.second][pair.first] = playerNumber; // sets the values from the coordinates to the temp board and changes it to the players number
              }
 
-             system("cls");
+             system("cls"); // clear the terminal to prepare it form the next itteration of printing
 
-             for (const auto &row : tempBoard) {
-                for (const auto &cell : row) {
-                    if (cell == playerNumber) {
-                        std::cout << "\033[32m" << cell << "\033[0m" << " ";
+             // this for loop actually pritns our dynamic movement of the shape
+             for (const auto &row : tempBoard) { // goes through each row in the tempboard 
+                for (const auto &cell : row) { // cell cell or element within the current row
+                    if (cell == playerNumber) { // if the cell or element is equal to the currentPlayers number
+                        std::cout << "\033[32m" << cell << "\033[0m" << " "; // we print the cell or element, in this case the players numebr in green
                     } else {
-                        std:: cout << cell << " ";
+                        std:: cout << cell << " "; // else print a space
                     }
                 }
-                std:: cout << std:: endl;
+                std:: cout << std:: endl; // end line for the current shape
              }
         }
 
@@ -341,7 +380,7 @@ int main() {
     BoardGame board;
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes currentShape = shapesMap.at("F Shape");
+    Shapes currentShape = shapesMap.at("W Shape");
 
     int currentPlayer = 1;
 
