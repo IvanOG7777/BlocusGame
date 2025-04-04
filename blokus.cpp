@@ -242,7 +242,7 @@ class BoardGame {
         }
 
         void newPrintMap(const std::vector<std::vector<int>>& board, const Shapes &shape, int xCoord, int yCoord, int playerNumber) {
-             auto tempBoard = board; // creates a temp board 
+             auto tempBoard = board; // creates a temp board
 
              std:: vector<std:: pair<int,int>> absoluteCoordinates; // vector of pairs to hold absolute coordinates of the shape
 
@@ -303,8 +303,14 @@ class BoardGame {
              // this for loop actually pritns our dynamic movement of the shape
              for (const auto &row : tempBoard) { // goes through each row in the tempboard 
                 for (const auto &cell : row) { // cell cell or element within the current row
-                    if (cell == playerNumber) { // if the cell or element is equal to the currentPlayers number
-                        std::cout << "\033[32m" << cell << "\033[0m" << " "; // we print the cell or element, in this case the players numebr in green
+                    if (cell == 1) { // if the cell or element is equal to the currentPlayers number
+                        std::cout << "\033[31m" << cell << "\033[0m" << " "; // we print the cell or element, in this case the players numebr in green
+                    } else if (cell == 2) {
+                        std:: cout << "\033[32m" << cell << "\033[0m" << " ";
+                    } else if (cell == 3) {
+                        std:: cout << "\033[33m" << cell << "\033[0m" << " ";
+                    } else if (cell == 4) {
+                        std:: cout << "\033[34m" << cell << "\033[0m" << " ";
                     } else {
                         std:: cout << cell << " "; // else print a space
                     }
@@ -381,6 +387,12 @@ int main() {
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
     Shapes currentShape = shapesMap.at("W Shape");
+    Shapes fShapeShape = shapesMap.at("F Shape");
+    Shapes squareShape = shapesMap.at("Square");
+    Shapes xShape = shapesMap.at("X Shape");
+
+    board.placePiece(fShapeShape, 5,6,3);
+    board.placePiece(squareShape, 10,5,2);
 
     int currentPlayer = 1;
 

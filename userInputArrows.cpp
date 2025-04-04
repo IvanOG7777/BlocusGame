@@ -48,3 +48,4 @@ int main() {
 // in order to run this you hace to do wnd + R, type cmd and enter
 // then enter path of the .exe file, in my case cd C:\Users\elder\OneDrive\Desktop\BlokusGame\BlocusGame\ 
 // then run the .exe file in my case userInputArrows.exe
+// to run a new version oyu must delete the old .exe file run again to create a new .exe file
