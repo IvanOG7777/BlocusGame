@@ -24,7 +24,7 @@ class Shapes { // class Shapes
 
             for(const auto &pair : this->coordinates) { //cycle through the orifinal pairs
                 int xCoordniate = pair.second; // swap the y to x
-                int yCoordniate = pair.first; // swap the x to y 
+                int yCoordniate = -pair.first; // swap the x to y 
                 rotatedCoordinates.push_back({xCoordniate, yCoordniate}); // push those new non normalized coordinates in the rotaed coordinates
             }
             if(!rotatedCoordinates.empty()) { // if the vector of pairs is not empty continue
@@ -36,10 +36,10 @@ class Shapes { // class Shapes
                     if(pair.second < minY) minY = pair.second;
                 }
 
-                for(auto &pair : rotatedCoordinates) { // cycle through the vector of pairs again and subtract the minX and minY from the nonnormalized values to make them normalized
-                    pair.first -= minX;
-                    pair.second -= minY;
-                }
+                // for(auto &pair : rotatedCoordinates) { // cycle through the vector of pairs again and subtract the minX and minY from the nonnormalized values to make them normalized
+                //     pair.first -= minX;
+                //     pair.second -= minY;
+                // }
             }
             return Shapes(rotatedName, rotatedCoordinates); //return the new name and rotated coordinates
         }
@@ -387,10 +387,30 @@ int main() {
     BoardGame board;
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes currentShape = shapesMap.at("W Shape");
+    Shapes currentShape = shapesMap.at("V Shape");
     Shapes fShapeShape = shapesMap.at("F Shape");
     Shapes squareShape = shapesMap.at("Square");
     Shapes xShape = shapesMap.at("X Shape");
+
+    // for (const auto &pair : currentShape.coordinates) {
+    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // }
+
+    // std:: cout << std:: endl;
+
+    // currentShape = currentShape.rotated90();
+
+    // for (const auto &pair : currentShape.coordinates) {
+    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // }
+
+    // std:: cout << std:: endl;
+
+    // currentShape = currentShape.rotated90();
+
+    // for (const auto &pair : currentShape.coordinates) {
+    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // }
 
     board.placePiece(fShapeShape, 5,6,3);
     board.placePiece(squareShape, 10,5,2);
@@ -409,6 +429,19 @@ int main() {
             board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
 
             int ch = _getch();
+
+            if (ch == 'v' || ch =='V') {
+                currentShape = currentShape.flipShapeVertical();
+            }
+
+            if (ch == 'h' || ch == 'H') {
+                currentShape = currentShape.flipShapeHorizontal();
+            }
+
+            if (ch == 'r' || ch == 'R') {
+                currentShape = currentShape.rotated90();
+            }
+
             if (ch == 224) {
                 int arrow = _getch();
                 switch (arrow)
