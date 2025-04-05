@@ -319,11 +319,11 @@ class BoardGame {
              }
         }
 
-        void placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
+        bool placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
             if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
                 std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
                 std:: cerr << "X and Y coordinate must be within the 20x20 grid square" << std:: endl;
-                return;
+                return false;
             }
 
             std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates; // creates a new vector of pairs called shapes coordinates and sets the passes shapes coordinates to it
@@ -338,22 +338,23 @@ class BoardGame {
                     std:: cerr << shape.name << " cannot be placed. One or more x/y coordinates are out of bounds" << std:: endl;
                     std:: cerr << "Cant place the piece at desired coordinate" << std:: endl;
                     std:: cout << std:: endl;
-                    return;
-                } else if (boardSize[pair.first][pair.second] == 0) { // hoenstly forgot what this line does
+                    return false;
+                } else if (boardSize[pair.second][pair.first] == 0) { // hoenstly forgot what this line does
 
                 } else {
                     std:: cerr << "A cell within the coordinates is taken or shape is out of bounds" << std:: endl;
                     std:: cout << std:: endl;
-                    return;
+                    return false;
                 }
             }
 
             // finally if the shpes coordinates are within the bounds we can place it
             for(auto &pair : shapesCoordinates) { // cycles through the pairs of coodinates
-                boardSize[pair.first][pair.second] = currentPlayer; // the board at the current x and y value coordniates is equal to the players number
+                boardSize[pair.second][pair.first] = currentPlayer; // the board at the current x and y value coordniates is equal to the players number
             }
             std:: cout << shape.name << " has been placed at " << "(" << xCoordinate << "," << yCoordinate << ")" << std:: endl; // checker messege to see that piece has been placed
             std:: cout << std:: endl;
+            return true;
         }
 };
 
@@ -393,45 +394,53 @@ int main() {
 
     board.placePiece(fShapeShape, 5,6,3);
     board.placePiece(squareShape, 10,5,2);
+    board.placePiece(currentShape, 15,14,1);
 
     int currentPlayer = 1;
 
+    bool hasBeenPlaced = false; // bool to check if pieces has been placed
     int offSetX = 0;
     int offSetY = 0;
 
-    bool confirmed = false;
+    while(!hasBeenPlaced) { // while hasBeenPlaced is true keep looping
+        bool confirmPiece = false; // sets confirm to false
 
-    while (!confirmed) {
-        // Show preview on the current board with the ghost shape overlay
-        board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
-        
-        // Capture arrow key input (using _getch() from conio.h)
-        int ch = _getch();
-        if (ch == 224) { // Arrow key prefix on Windows
-            int arrow = _getch();
-            switch (arrow) {
-                case 72: // Up arrow
+        while (!confirmPiece) { // while user hasnt pressed the enter or quit button keep looping, while(true)
+            board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
+
+            int ch = _getch();
+            if (ch == 224) {
+                int arrow = _getch();
+                switch (arrow)
+                {
+                case 72: // Up
                     offSetY = std:: max(0, offSetY - 1);
                     break;
-                case 80: // Down arrow
-                    offSetY = std::min(19, offSetY + 1);
+                case 80: //Down
+                    offSetY = std:: max(0, offSetY + 1);
                     break;
-                case 75: // Left arrow
-                    offSetX = std:: max(0, offSetX - 1);
+                case 75:
+                    offSetX = std:: max(0,offSetX - 1);
                     break;
-                case 77: // Right arrow
-                    offSetX = std:: min(19, offSetX + 1);
+                case 77:
+                    offSetX = std:: max(0, offSetX + 1);
                     break;
+                default:
+                    break;
+                }
+            } else if (ch == 13) { //Enter Key
+                confirmPiece = true; // sets confirm piece to true, make the top confirm piece false becasue of !conform piece !true == false
+            } else if (ch == 'q' || ch == 'Q') {
+                return 0; // Quits the game
             }
-        } else if (ch == 13) { // Enter key
-            confirmed = true;
-        } else if (ch == 'q' || ch == 'Q') { // Quit
-            return 0;
+        }
+
+        hasBeenPlaced = board.placePiece(currentShape, offSetX, offSetY, currentPlayer); // if the function return true, we break out of all while loops, else we keep looping
+
+        if (!hasBeenPlaced) {
+            std:: cout << "Invalid placement, Try again" << std:: endl;
         }
     }
-    
-    // Once confirmed, place the piece permanently
-    board.placePiece(currentShape, offSetX, offSetY, currentPlayer);
     
     // Print the final board state
     board.printMap();
