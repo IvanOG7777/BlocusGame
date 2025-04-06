@@ -385,6 +385,13 @@ class BoardGame {
                 }
             }
 
+            for (const auto &row : boardSize) {
+                for (const auto element : row) {
+                    if (element != currentPlayer) {
+                        
+                    }
+                }
+            }
             if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) {
                 return false;
             }
