@@ -16,33 +16,6 @@ class Shapes { // class Shapes
         Shapes( const std:: string &shapeName, // we use pass by reference for shape name
                 const std:: vector<std:: pair<int,int>> &shapeCoordinates) // we use pass by reference for shape coordinate
                 : name(shapeName), coordinates(shapeCoordinates) {} // pass those values in to the current Shape.
-
-        Shapes rotated90() const {
-            std:: string rotatedName = this->name + " Rotated 90 degrees"; //references tha name within the current Shape
-            std:: vector<std::pair<int,int>> rotatedCoordinates; //creates a new vector of pairs to store values in
-            int minX = this->coordinates[0].first, minY = this->coordinates[0].second; // sets the current minX and minY to the first pair of coordinates within the vector of pairs
-
-            for(const auto &pair : this->coordinates) { //cycle through the orifinal pairs
-                int xCoordniate = pair.second; // swap the y to x
-                int yCoordniate = -pair.first; // swap the x to y 
-                rotatedCoordinates.push_back({xCoordniate, yCoordniate}); // push those new non normalized coordinates in the rotaed coordinates
-            }
-            if(!rotatedCoordinates.empty()) { // if the vector of pairs is not empty continue
-                int minX = rotatedCoordinates[0].first; // set minX to first pairs X and sets minY to fisst pairs Y within rotaedCoordinates
-                int minY = rotatedCoordinates[0].second;
-
-                for (const auto &pair : rotatedCoordinates) { // cycle through rotaedCoordinates to find the smallest X and Y values
-                    if(pair.first < minX) minX = pair.first;
-                    if(pair.second < minY) minY = pair.second;
-                }
-
-                // for(auto &pair : rotatedCoordinates) { // cycle through the vector of pairs again and subtract the minX and minY from the nonnormalized values to make them normalized
-                //     pair.first -= minX;
-                //     pair.second -= minY;
-                // }
-            }
-            return Shapes(rotatedName, rotatedCoordinates); //return the new name and rotated coordinates
-        }
         
         std:: map<std:: string, Shapes> initailizeShapes() { // creates an initalizer for the shapes, we will return a map of string and type Shapes.
         std:: map<std:: string, Shapes> shape; // create a map called shape that holds a string name key and a type strig
@@ -148,6 +121,31 @@ class Shapes { // class Shapes
             std:: cout << std:: endl; // end line for the next line in the shape
         }
         std:: cout << std:: endl; // end line for the complete shape
+    }
+
+    Shapes rotated90() const {
+        std:: string rotatedName = this->name + " Rotated 90 degrees"; //references tha name within the current Shape
+        std:: vector<std::pair<int,int>> rotatedCoordinates; //creates a new vector of pairs to store values in
+
+        for(const auto &pair : this->coordinates) { //cycle through the orifinal pairs
+            int xCoordniate = pair.second; // swap the y to x
+            int yCoordniate = -pair.first; // swap the x to y 
+            rotatedCoordinates.push_back({xCoordniate, yCoordniate}); // push those new non normalized coordinates in the rotaed coordinates
+        }
+
+        int minX = 0, minY = 0;
+        for (const auto &pair : rotatedCoordinates) {
+            if (pair.first < minX) minX = pair.first;
+            if (pair.second < minY) minY = pair.second;
+        }
+
+        if (minX < 0 || minY < 0) {
+            for (auto &pair : rotatedCoordinates) {
+                pair.first -= minX;
+                pair.second -=minY;
+            }
+        }
+        return Shapes(rotatedName, rotatedCoordinates); //return the new name and rotated coordinates
     }
 
     Shapes flipShapeHorizontal() const {
@@ -319,6 +317,45 @@ class BoardGame {
              }
         }
 
+        bool isPieceDiagonal(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
+            if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // 
+                return false;
+            }
+
+            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates;
+            for (auto &pair : shapesCoordinates) {
+                pair.first += xCoordinate;
+                pair.second += yCoordinate;
+            }
+            for (auto &pair : shapesCoordinates) {
+                if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
+                    return false;
+                }
+            }
+
+            for (const auto &pair : shapesCoordinates) {
+                int x = pair.first;
+                int y = pair.second;
+
+                if (x - 1 >= 0 && y - 1 >= 0) {
+                    if(boardSize[y -1][x-1] == currentPlayer) return true;
+                }
+
+                if (x + 1 < static_cast<int>(boardSize[0].size()) && y - 1 >= 0) {
+                    if (boardSize[y - 1][x - 1] == currentPlayer) return true;
+                }
+
+                if (x - 1 >= 0 && y + 1 < static_cast<int>(boardSize.size())) {
+                    if (boardSize[y + 1][x - 1] == currentPlayer) return true;
+                }
+
+                if (x + 1 < static_cast<int>(boardSize[0].size()) && y + 1 < static_cast<int>(boardSize.size())) {
+                    if (boardSize[y + 1][x + 1] == currentPlayer) return true;
+                }
+            }
+            return false;
+        }
+
         bool placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
             if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
                 std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
@@ -347,6 +384,11 @@ class BoardGame {
                     return false;
                 }
             }
+
+            if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) {
+                return false;
+            }
+            
 
             // finally if the shpes coordinates are within the bounds we can place it
             for(auto &pair : shapesCoordinates) { // cycles through the pairs of coodinates
@@ -387,10 +429,11 @@ int main() {
     BoardGame board;
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes currentShape = shapesMap.at("V Shape");
+    Shapes currentShape = shapesMap.at("U Shape");
     Shapes fShapeShape = shapesMap.at("F Shape");
     Shapes squareShape = shapesMap.at("Square");
     Shapes xShape = shapesMap.at("X Shape");
+    Shapes vShape = shapesMap.at("V Shape");
 
     // for (const auto &pair : currentShape.coordinates) {
     //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
@@ -404,17 +447,33 @@ int main() {
     //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
     // }
 
-    // std:: cout << std:: endl;
+    // // std:: cout << std:: endl;
 
-    // currentShape = currentShape.rotated90();
+    // // currentShape = currentShape.rotated90();
 
-    // for (const auto &pair : currentShape.coordinates) {
-    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // }
+    // // for (const auto &pair : currentShape.coordinates) {
+    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // // }
+
+    // // std:: cout << std:: endl;
+
+    // // currentShape = currentShape.rotated90();
+
+    // // for (const auto &pair : currentShape.coordinates) {
+    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // // }
+
+    // // std:: cout << std:: endl;
+
+    // // currentShape = currentShape.rotated90();
+
+    // // for (const auto &pair : currentShape.coordinates) {
+    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
+    // // }
 
     board.placePiece(fShapeShape, 5,6,3);
     board.placePiece(squareShape, 10,5,2);
-    board.placePiece(currentShape, 15,14,1);
+    board.placePiece(vShape, 15,14,1);
 
     int currentPlayer = 1;
 
