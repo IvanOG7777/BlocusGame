@@ -332,28 +332,56 @@ class BoardGame {
                     return false;
                 }
             }
+            
+            int edgeCounter = 0;
+            bool isDiagonal = false;
 
             for (const auto &pair : shapesCoordinates) {
                 int x = pair.first;
                 int y = pair.second;
 
                 if (x - 1 >= 0 && y - 1 >= 0) {
-                    if(boardSize[y -1][x-1] == currentPlayer) return true;
+                    if (boardSize[y - 1][x - 1] == currentPlayer) isDiagonal = true;
                 }
 
                 if (x + 1 < static_cast<int>(boardSize[0].size()) && y - 1 >= 0) {
-                    if (boardSize[y - 1][x - 1] == currentPlayer) return true;
+                    if (boardSize[y - 1][x + 1] == currentPlayer) isDiagonal = true;
                 }
 
                 if (x - 1 >= 0 && y + 1 < static_cast<int>(boardSize.size())) {
-                    if (boardSize[y + 1][x - 1] == currentPlayer) return true;
+                    if (boardSize[y + 1][x - 1] == currentPlayer) isDiagonal = true;
                 }
 
                 if (x + 1 < static_cast<int>(boardSize[0].size()) && y + 1 < static_cast<int>(boardSize.size())) {
-                    if (boardSize[y + 1][x + 1] == currentPlayer) return true;
+                    if (boardSize[y + 1][x + 1] == currentPlayer) isDiagonal = true;
                 }
             }
-            return false;
+
+            for (const auto &pair : shapesCoordinates) {
+                int x = pair.first;
+                int y = pair.second;
+
+                if (x + 1 < boardSize[0].size() && boardSize[y][x + 1] == currentPlayer ) {
+                    edgeCounter++; 
+                }
+
+                if (x - 1 >= 0 && boardSize[y][x - 1] == currentPlayer) {
+                    edgeCounter++;
+                }
+
+                if (y + 1 < boardSize.size() && boardSize[y + 1][x] == currentPlayer) {
+                    edgeCounter++;
+                }
+
+                if (y - 1 >= 0 && boardSize[y - 1][x] == currentPlayer) {
+                    edgeCounter++;
+                }
+
+                if (edgeCounter > 0) {
+                    return false;
+                }
+            }
+            return isDiagonal;
         }
 
         bool placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
@@ -411,30 +439,6 @@ class BoardGame {
 
 
 int main() {
-    // BoardGame board;
-    // board.initailizeMap();
-
-    // auto shapesMap = ShapesManager::getInstance().getShapeMap();
-    // Shapes single = shapesMap.at("Single");
-    // Shapes nShape = shapesMap.at("N Shape");
-    // Shapes bigTShape = shapesMap.at("Big T");
-    // bigTShape = bigTShape.rotated90();
-    // Shapes pShape = shapesMap.at("P Shape");
-    // Shapes square = shapesMap.at("Square");
-
-    // board.placePiece(single, 0,0,1);
-    // board.placePiece(square, 18,0,2);
-    // board.placePiece(single, 0,19,3);
-    // board.placePiece(single, 19,19,4);
-
-    // // board.placePiece(nShape, 19,0,2);
-
-    // // board.placePiece(bigTShape, 0,19, 3);
-
-    // // board.placePiece(pShape, 19, 19, 4);
-
-    // board.printMap();
-
     BoardGame board;
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
@@ -443,42 +447,6 @@ int main() {
     Shapes squareShape = shapesMap.at("Square");
     Shapes xShape = shapesMap.at("X Shape");
     Shapes vShape = shapesMap.at("V Shape");
-
-    // for (const auto &pair : currentShape.coordinates) {
-    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // }
-
-    // std:: cout << std:: endl;
-
-    // currentShape = currentShape.rotated90();
-
-    // for (const auto &pair : currentShape.coordinates) {
-    //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // }
-
-    // // std:: cout << std:: endl;
-
-    // // currentShape = currentShape.rotated90();
-
-    // // for (const auto &pair : currentShape.coordinates) {
-    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // // }
-
-    // // std:: cout << std:: endl;
-
-    // // currentShape = currentShape.rotated90();
-
-    // // for (const auto &pair : currentShape.coordinates) {
-    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // // }
-
-    // // std:: cout << std:: endl;
-
-    // // currentShape = currentShape.rotated90();
-
-    // // for (const auto &pair : currentShape.coordinates) {
-    // //     std:: cout << "(" << pair.first << "," << pair.second << ")" << " ";
-    // // }
 
     board.placePiece(fShapeShape, 5,6,3);
     board.placePiece(squareShape, 10,5,2);
