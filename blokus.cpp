@@ -317,30 +317,30 @@ class BoardGame {
              }
         }
 
-        bool isPieceDiagonal(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
-            if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // 
-                return false;
+        bool isPieceDiagonal(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { // function to check if piece is diagonal to another of the current users pieces, takes in the shape, x and y coordinates and the players number as parameters
+            if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks if the shapes coordinates are within the maps boundries
+                return false; // if it isnt we return false, cant place the piece
             }
 
-            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates;
-            for (auto &pair : shapesCoordinates) {
-                pair.first += xCoordinate;
-                pair.second += yCoordinate;
+            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates; // create a new vector of shapescoordinates and pass the shapes coordinates to this so we dont change the original coordinates
+            for (auto &pair : shapesCoordinates) { // for each loop that add the current x and y coordinate to all pairs within the shape
+                pair.first += xCoordinate; // adding the current x 
+                pair.second += yCoordinate; // adding the current y
             }
-            for (auto &pair : shapesCoordinates) {
+            for (auto &pair : shapesCoordinates) { // for each loop to then check if the absolute coordinates of the shape are within bounds of the map
                 if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
-                    return false;
+                    return false; // if it isnt we return false, cane place the piece
                 }
             }
             
-            int edgeCounter = 0;
-            bool isDiagonal = false;
+            int edgeCounter = 0; // edge counter to count how many edges the current shape is touching
+            bool isDiagonal = false; // bool to check if the shape only has one diagonal cell touching the other piece
 
-            for (const auto &pair : shapesCoordinates) {
+            for (const auto &pair : shapesCoordinates) { // for each loop to check diagonally of each pair within the shpaes absolutes coordinates
                 int x = pair.first;
                 int y = pair.second;
 
-                if (x - 1 >= 0 && y - 1 >= 0) {
+                if (x - 1 >= 0 && y - 1 >= 0) { // if the current pairs x - 1 is less than or = to 0 and if the current piars y - 1 >= 0
                     if (boardSize[y - 1][x - 1] == currentPlayer) isDiagonal = true;
                 }
 
