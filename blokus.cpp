@@ -385,15 +385,17 @@ class BoardGame {
                 }
             }
 
-            for (const auto &row : boardSize) {
-                for (const auto element : row) {
-                    if (element != currentPlayer) {
-                        
+            bool hasPlayerPlacedPiece = false; // bool for first loop through game to see if the player has already placed a piece
+            for (auto &row : boardSize) { // cycle through the board to find a cell with the current players number
+                for (auto &cell : row) {
+                    if (cell == currentPlayer) { // if a cell is equal to the current players number we return true meaning player has placed a piece already
+                        hasPlayerPlacedPiece = true; // sets it to true, we found a piece
+                        if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // calls the place piece function focing user to place diagonal to their own shapes
+                            return false;
+                        }
+                        break; // break out of this loop
                     }
                 }
-            }
-            if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) {
-                return false;
             }
             
 
