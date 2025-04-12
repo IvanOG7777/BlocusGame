@@ -482,17 +482,32 @@ class Player {
 
 
 int main() {
-    // BoardGame board;
+    BoardGame board;
+    int playerCount = 0;
+    std:: vector<Player> playervector;
 
-    const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes currentShape = shapesMap.at("F Shape");
-    Shapes fShapeShape = shapesMap.at("F Shape");
-    Shapes squareShape = shapesMap.at("Square");
-    Shapes xShape = shapesMap.at("X Shape");
-    Shapes vShape = shapesMap.at("V Shape");
-    Shapes longI = shapesMap.at("Long I");
-    Shapes bigT = shapesMap.at("F Shape");
-    Shapes wShape = shapesMap.at("W Shape");
+    std:: cout << "Enter amount of players (1-4): ";
+    std:: cin >> playerCount;
+
+    while (playerCount <= 0 || playerCount > 4) {
+        std:: cout << "Enter amount of players (1-4): ";
+        std:: cin >> playerCount;
+    }
+
+    playervector.resize(playerCount);
+
+    std:: cout << static_cast<int>(playervector.size());
+    
+
+    // const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
+    // Shapes currentShape = shapesMap.at("F Shape");
+    // Shapes fShapeShape = shapesMap.at("F Shape");
+    // Shapes squareShape = shapesMap.at("Square");
+    // Shapes xShape = shapesMap.at("X Shape");
+    // Shapes vShape = shapesMap.at("V Shape");
+    // Shapes longI = shapesMap.at("Long I");
+    // Shapes bigT = shapesMap.at("F Shape");
+    // Shapes wShape = shapesMap.at("W Shape");
 
     // board.placePiece(fShapeShape, 5,6,3);
     // board.placePiece(squareShape, 10,5,2);
