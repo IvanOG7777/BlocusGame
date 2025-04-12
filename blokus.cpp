@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <vector>
 #include <map>
 #include <conio.h>
@@ -17,11 +18,11 @@ class Shapes { // class Shapes
                 const std:: vector<std:: pair<int,int>> &shapeCoordinates) // we use pass by reference for shape coordinate
                 : name(shapeName), coordinates(shapeCoordinates) {} // pass those values in to the current Shape.
         
-        std:: map<std:: string, Shapes> initailizeShapes() { // creates an initalizer for the shapes, we will return a map of string and type Shapes.
+       static std:: map<std:: string, Shapes> initailizeShapes() { // creates an initalizer for the shapes, we will return a map of string and type Shapes.
         std:: map<std:: string, Shapes> shape; // create a map called shape that holds a string name key and a type strig
         
         //Shapes for the game
-        shape["Single"] = Shapes("Single", std::vector<std::pair<int,int>>{{0,0}}); // we make a key in shape called "Single" to be of type Shape with name "Single" and coordinates of 0,0
+        shape["Single"] = Shapes("Single", std::vector<std::pair<int,int>>{{0,0}}); // we make a key in shape called "Single" to be of type Shape with name "Single" and coordinates of 
         shape["Two"] = Shapes("Two", std::vector<std::pair<int,int>>{{0,0}, {1,0}});
         shape["Three"] = Shapes("Three", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {2,0}});
         shape["Square"] = Shapes("Square", std::vector<std::pair<int,int>>{{0,0},{0,1}, {1,0}, {1,1}});
@@ -29,9 +30,9 @@ class Shapes { // class Shapes
         shape["Long I"] = Shapes("Long I", std::vector<std::pair<int,int>>{{0,0}, {0,1}, {0,2}, {0,3}, {0,4}});
         shape["Big L"] = Shapes("Big L", std::vector<std::pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}, {0,3}});
         shape["Short L"] = Shapes("Short L", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {0,1}, {0,2}});
-        shape["X Shape"] = Shapes("X Shape", std:: vector<std:: pair<int,int>>{{1,0},{0,1},{1,1},{2,1},{1,2}});
-        shape["Big T"] = Shapes("Big T", std:: vector<std:: pair<int,int>>{{1,0},{1,1}, {1,2},{0,2}, {2,2}});
-        shape["Short T"] = Shapes("Short T", std:: vector<std:: pair<int,int>>{{1,0},{1,1},{0,2},{2,2}});
+        shape["X Shape"] = Shapes("X Shape", std:: vector<std:: pair<int,int>>{{1,1},{1,2},{2,1},{0,2},{1,0}});
+        shape["Big T"] = Shapes("Big T", std:: vector<std:: pair<int,int>>{{1,1},{1,2}, {0,2},{2,2}, {1,0}});
+        shape["Short T"] = Shapes("Short T", std:: vector<std:: pair<int,int>>{{1,1},{0,1},{2,1},{1,0}});
         shape["U Shape"] = Shapes("U Shape", std:: vector<std:: pair<int,int>>{{0,0}, {1,0}, {2,0}, {0,1}, {2,1}});
         shape["Y Shape"] = Shapes("Y Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{3,0},{1,1}});
         shape["V Shape"] = Shapes("V Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{2,0},{2,1},{2,2}});
@@ -41,7 +42,7 @@ class Shapes { // class Shapes
         shape["Mini L"] = Shapes("Mini L", std:: vector<std:: pair<int,int>>{{0,0},{0,1},{1,0}});
         shape["N Shape"] = Shapes("N Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{3,1}});
         shape["W Shape"] = Shapes("W Shape", std:: vector<std:: pair<int,int>>{{0,0},{1,0},{1,1},{2,1},{2,2}});
-        shape["F Shape"] = Shapes("F Shape", std:: vector<std::pair<int,int>>{{1,1},{0,1},{1,0},{1,2},{2,2}});
+        shape["F Shape"] = Shapes("F Shape", std:: vector<std::pair<int,int>>{{1,1},{0,1},{1,2},{2,2},{1,0}});
         
         return shape;
     }
@@ -437,80 +438,141 @@ class BoardGame {
         }
 };
 
+class Player {
+    public:
+        std:: string playerName;
+        int playerPoints = 0;
+
+        std:: map<std:: string, Shapes> personalShapes = Shapes::initailizeShapes();
+
+        std:: map<std:: string, Shapes> removePiece(Shapes &currentShape) {
+            auto shapeToDelete = personalShapes.find(currentShape.name);
+
+            if (shapeToDelete != personalShapes.end()) {
+                personalShapes.erase(shapeToDelete);
+            }
+            return personalShapes;
+        }
+
+        void availablePieces() {
+            std:: cout << "Availale Pieces" << std:: endl;
+            for (const auto shape : personalShapes) {
+                std:: cout << shape.first << std:: endl;
+            }
+            std:: cout << std:: endl;
+        }
+
+        bool findSpecificPiece(Shapes &currentShape) {
+            auto shapeTofind = personalShapes.find(currentShape.name);
+
+            if (shapeTofind != personalShapes.end()) {
+                return true;
+            }
+            return false;
+        }
+
+        void setName(std:: string passedName) {
+            playerName = passedName;
+        }
+
+        std:: string getName() {
+            return playerName;
+        }
+};
+
 
 int main() {
-    BoardGame board;
+    // BoardGame board;
 
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes currentShape = shapesMap.at("U Shape");
+    Shapes currentShape = shapesMap.at("F Shape");
     Shapes fShapeShape = shapesMap.at("F Shape");
     Shapes squareShape = shapesMap.at("Square");
     Shapes xShape = shapesMap.at("X Shape");
     Shapes vShape = shapesMap.at("V Shape");
+    Shapes longI = shapesMap.at("Long I");
+    Shapes bigT = shapesMap.at("F Shape");
+    Shapes wShape = shapesMap.at("W Shape");
 
-    board.placePiece(fShapeShape, 5,6,3);
-    board.placePiece(squareShape, 10,5,2);
-    board.placePiece(vShape, 15,14,1);
+    // board.placePiece(fShapeShape, 5,6,3);
+    // board.placePiece(squareShape, 10,5,2);
+    // board.placePiece(vShape, 15,14,1);
+    // board.placePiece(bigT, 10, 12, 4);
 
-    int currentPlayer = 1;
+    // int currentPlayer = 1;
 
-    bool hasBeenPlaced = false; // bool to check if pieces has been placed
-    int offSetX = 0;
-    int offSetY = 0;
+    // bool hasBeenPlaced = false; // bool to check if pieces has been placed
+    // int offSetX = 0;
+    // int offSetY = 0;
 
-    while(!hasBeenPlaced) { // while hasBeenPlaced is true keep looping
-        bool confirmPiece = false; // sets confirm to false
+    // while(!hasBeenPlaced) { // while hasBeenPlaced is true keep looping
+    //     bool confirmPiece = false; // sets confirm to false
 
-        while (!confirmPiece) { // while user hasnt pressed the enter or quit button keep looping, while(true)
-            board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
+    //     while (!confirmPiece) { // while user hasnt pressed the enter or quit button keep looping, while(true)
+    //         board.newPrintMap(board.boardSize, currentShape, offSetX, offSetY, currentPlayer);
 
-            int ch = _getch();
+    //         int ch = _getch();
 
-            if (ch == 'v' || ch =='V') {
-                currentShape = currentShape.flipShapeVertical();
-            }
+    //         if (ch == 'v' || ch =='V') {
+    //             currentShape = currentShape.flipShapeVertical();
+    //         }
 
-            if (ch == 'h' || ch == 'H') {
-                currentShape = currentShape.flipShapeHorizontal();
-            }
+    //         if (ch == 'h' || ch == 'H') {
+    //             currentShape = currentShape.flipShapeHorizontal();
+    //         }
 
-            if (ch == 'r' || ch == 'R') {
-                currentShape = currentShape.rotated90();
-            }
+    //         if (ch == 'r' || ch == 'R') {
+    //             currentShape = currentShape.rotated90();
+    //         }
 
-            if (ch == 224) {
-                int arrow = _getch();
-                switch (arrow)
-                {
-                case 72: // Up
-                    offSetY = std:: max(0, offSetY - 1);
-                    break;
-                case 80: //Down
-                    offSetY = std:: max(0, offSetY + 1);
-                    break;
-                case 75:
-                    offSetX = std:: max(0,offSetX - 1);
-                    break;
-                case 77:
-                    offSetX = std:: max(0, offSetX + 1);
-                    break;
-                default:
-                    break;
-                }
-            } else if (ch == 13) { //Enter Key
-                confirmPiece = true; // sets confirm piece to true, make the top confirm piece false becasue of !conform piece !true == false
-            } else if (ch == 'q' || ch == 'Q') {
-                return 0; // Quits the game
-            }
-        }
+    //         if (ch == 224) {
+    //             int arrow = _getch();
+    //             switch (arrow)
+    //             {
+    //             case 72: // Up
+    //                 offSetY = std:: max(0, offSetY - 1);
+    //                 break;
+    //             case 80: //Down
+    //                 offSetY = std:: max(0, offSetY + 1);
+    //                 break;
+    //             case 75:
+    //                 offSetX = std:: max(0,offSetX - 1);
+    //                 break;
+    //             case 77:
+    //                 offSetX = std:: max(0, offSetX + 1);
+    //                 break;
+    //             default:
+    //                 break;
+    //             }
+    //         } else if (ch == 13) { //Enter Key
+    //             confirmPiece = true; // sets confirm piece to true, make the top confirm piece false becasue of !conform piece !true == false
+    //         } else if (ch == 'q' || ch == 'Q') {
+    //             return 0; // Quits the game
+    //         }
+    //     }
 
-        hasBeenPlaced = board.placePiece(currentShape, offSetX, offSetY, currentPlayer); // if the function return true, we break out of all while loops, else we keep looping
+    //     hasBeenPlaced = board.placePiece(currentShape, offSetX, offSetY, currentPlayer); // if the function return true, we break out of all while loops, else we keep looping
 
-        if (!hasBeenPlaced) {
-            std:: cout << "Invalid placement, Try again" << std:: endl;
-        }
-    }
+    //     if (!hasBeenPlaced) {
+    //         std:: cout << "Invalid placement, Try again" << std:: endl;
+    //     }
+    // }
     
-    // Print the final board state
-    board.printMap();
+    // // Print the final board state
+    // board.printMap();
+
+    // Player player;
+
+    // player.availablePieces();
+    // player.removePiece(currentShape);
+    // player.removePiece(xShape);
+    // player.removePiece(wShape);
+    // player.removePiece(bigT);
+    // // player.removePiece(longI);
+    // player.availablePieces();
+
+    // bool isPieceAvailable = player.findSpecificPiece(longI);
+
+    // std:: cout << "Is piece there " << (isPieceAvailable ? "true" : "flase");
+    
 }
