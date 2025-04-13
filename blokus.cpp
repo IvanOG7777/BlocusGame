@@ -537,44 +537,45 @@ int main() {
                 board.printMapDynamically(board.boardSize, placingShape, offSetX, offSetY, current + 1);
 
                 int ch = _getch();
-
-            if (ch == 'v' || ch =='V') {
-                placingShape = placingShape.flipShapeVertical();
-            }
-
-            if (ch == 'h' || ch == 'H') {
-                placingShape = placingShape.flipShapeHorizontal();
-            }
-
-            if (ch == 'r' || ch == 'R') {
-                placingShape = placingShape.rotated90();
-            }
-
-            if (ch == 224) {
-                int arrow = _getch();
-                switch (arrow)
-                {
-                case 72: // Up
-                    offSetY = std:: max(0, offSetY - 1);
-                    break;
-                case 80: //Down
-                    offSetY = std:: max(0, offSetY + 1);
-                    break;
-                case 75:
-                    offSetX = std:: max(0,offSetX - 1);
-                    break;
-                case 77:
-                    offSetX = std:: max(0, offSetX + 1);
-                    break;
-                default:
-                    break;
+                
+                if (ch == 'v' || ch =='V') {
+                    placingShape = placingShape.flipShapeVertical();
                 }
-            } else if (ch == 13) { //Enter Key
+                
+                if (ch == 'h' || ch == 'H') {
+                    placingShape = placingShape.flipShapeHorizontal();
+                }
+
+                if (ch == 'r' || ch == 'R') {
+                    placingShape = placingShape.rotated90();
+                }
+
+                if (ch == 224) {
+                    int arrow = _getch();
+                    switch (arrow)
+                    {
+                    case 72: // Up
+                        offSetY = std:: max(0, offSetY - 1);
+                    break;
+                    case 80: //Down
+                        offSetY = std:: max(0, offSetY + 1);
+                    break;
+                    case 75:
+                        offSetX = std:: max(0,offSetX - 1);
+                    break;
+                    case 77:
+                        offSetX = std:: max(0, offSetX + 1);
+                    break;
+                    default:
+                    break;
+                    }
+                } else if (ch == 13) { //Enter Key
                 hasPlacedPiece = true; // sets confirm piece to true, make the top confirm piece false becasue of !conform piece !true == false
-            } else if (ch == 'q' || ch == 'Q') {
-                return 0; // Quits the game
+                } else if (ch == 'q' || ch == 'Q') {
+                    return 0; // Quits the game
+                    }
             }
-            }
+            hasPlacedPiece = board.placePiece(placingShape, offSetX, offSetY, currentPlayer);
         }
     }
 
