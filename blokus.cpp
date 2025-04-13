@@ -485,6 +485,7 @@ int main() {
     BoardGame board;
     int playerCount = 0;
     std:: vector<Player> playervector;
+    std:: string playerName;
 
     std:: cout << "Enter amount of players (1-4): ";
     std:: cin >> playerCount;
@@ -496,7 +497,12 @@ int main() {
 
     playervector.resize(playerCount);
 
-    std:: cout << static_cast<int>(playervector.size());
+    for (auto &player : playervector) {
+        std:: cout << "Enter Name: ";
+        std:: cin >> playerName;
+        player.setName(playerName);
+    }
+
     
 
     // const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
