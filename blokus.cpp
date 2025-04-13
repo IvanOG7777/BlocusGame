@@ -4,6 +4,7 @@
 #include <map>
 #include <conio.h>
 #include <windows.h>
+#include <limits>
 #undef max
 #undef min
 
@@ -240,7 +241,7 @@ class BoardGame {
             }
         }
 
-        void newPrintMap(const std::vector<std::vector<int>>& board, const Shapes &shape, int xCoord, int yCoord, int playerNumber) {
+        void printMapDynamically(const std::vector<std::vector<int>>& board, const Shapes &shape, int xCoord, int yCoord, int playerNumber) {
              auto tempBoard = board; // creates a temp board
 
              std:: vector<std:: pair<int,int>> absoluteCoordinates; // vector of pairs to hold absolute coordinates of the shape
@@ -485,24 +486,100 @@ int main() {
     BoardGame board;
     int playerCount = 0;
     std:: vector<Player> playervector;
-    std:: string playerName;
+    int offSetX = 0, offSetY = 0;
+    bool hasPickedPiece = false;
+    bool hasPlacedPiece = false;
+    bool continueGame = false;
+    int currentPlayer = 0;
+    const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
 
-    std:: cout << "Enter amount of players (1-4): ";
+    std:: cout << "Enter amount of players (2-4): ";
     std:: cin >> playerCount;
 
-    while (playerCount <= 0 || playerCount > 4) {
-        std:: cout << "Enter amount of players (1-4): ";
+    while (playerCount <= 1 || playerCount > 4) {
+        std:: cout << "Enter amount of players (2-4): ";
         std:: cin >> playerCount;
     }
 
     playervector.resize(playerCount);
 
     for (auto &player : playervector) {
+        std:: string playerName;
         std:: cout << "Enter Name: ";
         std:: cin >> playerName;
         player.setName(playerName);
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+    
+    while (playervector.size() > 1) {
+        std:: string pieceName;
+        for (int current = 0; current < playervector.size(); current++) {
+            hasPickedPiece = false;
+            hasPlacedPiece = false;
+            while (!hasPickedPiece) {
+                std:: cout << "Enter Piece Name: ";
+                std::getline(std:: cin, pieceName);
+                
+                while (shapesMap.find(pieceName) == shapesMap.end()) {
+                    std:: cerr << "Piece Name was typed wrong or has been played" << std:: endl;
+                    std:: cout << "Type Piece you want to play: ";
+                    std:: getline(std:: cin, pieceName);
+                }
+
+                Shapes currentShape = shapesMap.at(pieceName);
+                std:: cout << "Does current player have: " << pieceName << " " << (playervector[current].findSpecificPiece(currentShape) ? "True" : "False") << std:: endl;
+                std:: cout << "Current Player: " <<  playervector[current].getName() << std:: endl;
+                hasPickedPiece = true;
+            }
+            Shapes placingShape = playervector[current].personalShapes.at(pieceName);
+            while (!hasPlacedPiece) {
+                board.printMapDynamically(board.boardSize, placingShape, offSetX, offSetY, current + 1);
+
+                int ch = _getch();
+
+            if (ch == 'v' || ch =='V') {
+                placingShape = placingShape.flipShapeVertical();
+            }
+
+            if (ch == 'h' || ch == 'H') {
+                placingShape = placingShape.flipShapeHorizontal();
+            }
+
+            if (ch == 'r' || ch == 'R') {
+                placingShape = placingShape.rotated90();
+            }
+
+            if (ch == 224) {
+                int arrow = _getch();
+                switch (arrow)
+                {
+                case 72: // Up
+                    offSetY = std:: max(0, offSetY - 1);
+                    break;
+                case 80: //Down
+                    offSetY = std:: max(0, offSetY + 1);
+                    break;
+                case 75:
+                    offSetX = std:: max(0,offSetX - 1);
+                    break;
+                case 77:
+                    offSetX = std:: max(0, offSetX + 1);
+                    break;
+                default:
+                    break;
+                }
+            } else if (ch == 13) { //Enter Key
+                hasPlacedPiece = true; // sets confirm piece to true, make the top confirm piece false becasue of !conform piece !true == false
+            } else if (ch == 'q' || ch == 'Q') {
+                return 0; // Quits the game
+            }
+            }
+        }
+    }
+
+
+  
     
 
     // const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
