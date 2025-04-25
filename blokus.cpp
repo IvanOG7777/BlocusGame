@@ -386,6 +386,10 @@ class BoardGame {
             return isDiagonal;
         }
 
+        bool isFirstPlacement(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
+
+        }
+
         bool placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
             if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
                 std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
@@ -471,6 +475,11 @@ class Player {
             }
             return false;
         }
+
+        int piecesPlaced = 0;
+
+        bool isFirstMove() const { return piecesPlaced == 0;}
+        void notePLaced() {++piecesPlaced;}
 
         void setName(std:: string passedName) {
             playerName = passedName;
