@@ -521,21 +521,46 @@ int main() {
             hasPlacedPiece = false;
             std:: string pieceName;
             Shapes choosenShape;
+            int options;
 
             while (!hasPickedPiece) {
-                std:: cout << playervector[current].getName() << ", type piece name: ";
-                std:: getline(std:: cin, pieceName);
+                std:: cout << playervector[current].getName() << std:: endl;
+                std:: cout << "Enter 1 to see current available pieces" << std:: endl;
+                std:: cout << "Enter 2 to see movements for shape" << std:: endl;
+                std:: cout << "Enter 3 to type piece name" << std:: endl;
+                std:: cin >> options;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-                while (shapesMap.find(pieceName) == shapesMap.end()) {
-                    std:: cerr << "Piece name was typed wrong or has been placed. Try again: ";
-                    std:: getline(std:: cin, pieceName);
-                }
-                choosenShape = shapesMap.at(pieceName);
+                if (options == 1) {
+                    std:: cout << "You have the current pieces:" << std:: endl;
+                    playervector[current].availablePieces();
+                } else if (options == 2) {
+                    std:: cout << "Controls:" << std:: endl;
+                    std:: cout << "Arrow keys - move shape" << std:: endl;
+                    std:: cout << "R/r rotate 90°" << std:: endl;
+                    std:: cout << "H/h flip horizontal" << std:: endl;
+                    std:: cout << "V/v flip vertical" << std:: endl;
+                    std:: cout << "Enter to place piece" << std:: endl;
+                } else if (options == 3) {
+                    do {
+                        std:: cout << playervector[current].getName() << ", type piece name: ";
+                        std:: getline(std:: cin, pieceName);
+                        choosenShape = shapesMap.at(pieceName);
 
-                if (playervector[current].personalShapes.find(pieceName) == playervector[current].personalShapes.end()) {
-                    std:: cerr << "Piece has already been placed. Choose another." << std:: endl;
+                        if (shapesMap.find(pieceName) == shapesMap.end()) {
+                            std:: cerr << "Piece doesnt exist or was misspelled. Try again" << std:: endl;
+                            continue;
+                        }
+
+                        if (!playervector[current].findSpecificPiece(choosenShape)) {
+                            std:: cerr << "You have used this piece already, Try again" << std:: endl;
+                            continue;
+                        }
+                        hasPickedPiece = true;
+                        
+                    } while (!hasPickedPiece);
                 } else {
-                    hasPickedPiece = true;
+                    std:: cerr << "Please enter 1, 2, or 3" << std:: endl;
                 }
             }
 
@@ -574,6 +599,5 @@ int main() {
             }
         }
     }
-    
     board.printMap();
 }
