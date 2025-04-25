@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <utility>
 #include <vector>
 #include <map>
 #include <conio.h>
@@ -387,10 +388,36 @@ class BoardGame {
         }
 
         bool isFirstPlacement(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) {
+            if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks if the shapes coordinates are within the maps boundries
+                return false; // if it isnt we return false, cant place the piece
+            }
 
+            std:: vector<std:: pair<int,int>> shapesCoordinates = shape.coordinates; // create a new vector of shapescoordinates and pass the shapes coordinates to this so we dont change the original coordinates
+            for (auto &pair : shapesCoordinates) { // for each loop that add the current x and y coordinate to all pairs within the shape
+                pair.first += xCoordinate; // adding the current x offset
+                pair.second += yCoordinate; // adding the current y offset
+            }
+            for (auto &pair : shapesCoordinates) { // for each loop to then check if the absolute coordinates of the shape are within bounds of the map
+                if (pair.first < 0 || pair.first >= 20 || pair.second < 0 || pair.second >= 20) {
+                    return false; // if it isnt we return false, cane place the piece
+                }
+            }
+
+            bool isFirstPiece = true; // bool to check if its the players first time placing a piece
+            for (const auto &row : boardSize) { // cylces through each row and all the cells within that row to find the players number,
+                for (const auto &cell : row) {
+                    if (cell == currentPlayer) { // if found that means the player has a piece on the map already
+                        isFirstPiece = false; // else they dont have a piece on the map
+                        break;
+                    }
+                }
+            }
+            return isFirstPiece; // we return eihter true or false
         }
 
         bool placePiece(Shapes &shape, int xCoordinate, int yCoordinate, int currentPlayer) { //pasisng the x and y coordinates of where the user wants to place the shape, passing Shapes object, alson with the name of the shape to find it and the players numebr
+            int rows = boardSize.size();
+            int columns = boardSize[0].size();
             if (xCoordinate < 0 || xCoordinate >= 20 || yCoordinate < 0 || yCoordinate >= 20) { // checks the bounds of the board to see if the x and y values inputed are within the games boundries
                 std:: cerr << "Invalid coordinate" << std:: endl; // 2 error messeges in case user does input outside of the boundry
                 std:: cerr << "X and Y coordinate must be within the 20x20 grid square" << std:: endl;
@@ -420,11 +447,26 @@ class BoardGame {
             }
 
             bool hasPlayerPlacedPiece = false; // bool for first loop through game to see if the player has already placed a piece
+            bool hasPlacedInCorner = false; // bool to chekc if the player has placed in the corner of the map
+
+            for (const auto &pair : shapesCoordinates) { // for loop to cycle through the shpapes absolute coordinates
+                int x = pair.first; // sets the x value of the current pair
+                int y = pair.second; // sets the y value of the current pair
+
+                if ((x == 0 && y == 0) || // if x and y == the top left corner
+                    (x == columns - 1 && y == 0) || // if x and y == the top right corner
+                    (x == 0 && y == rows - 1) || // if x and y == the bottom left corner
+                    (x == columns - 1 && y == rows - 1)) { // if x and y == the bottom right corner
+                        hasPlacedInCorner = true; // if any condition above is true we have placed in the corner
+                        break;
+                    }
+            }
+
             for (auto &row : boardSize) { // cycle through the board to find a cell with the current players number
                 for (auto &cell : row) {
                     if (cell == currentPlayer) { // if a cell is equal to the current players number we return true meaning player has placed a piece already
                         hasPlayerPlacedPiece = true; // sets it to true, we found a piece
-                        if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // calls the place piece function focing user to place diagonal to their own shapes
+                        if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // calls the isPIeceDiagonal function forcing user to place diagonal to their own shapes
                             return false;
                         }
                         break; // break out of this loop
@@ -433,7 +475,7 @@ class BoardGame {
             }
             
 
-            // finally if the shpes coordinates are within the bounds we can place it
+            // finally if the shapes coordinates are within the bounds we can place it
             for(auto &pair : shapesCoordinates) { // cycles through the pairs of coodinates
                 boardSize[pair.second][pair.first] = currentPlayer; // the board at the current x and y value coordniates is equal to the players number
             }
@@ -498,11 +540,10 @@ int main() {
     bool hasPickedPiece = false;
     bool hasPlacedPiece = false;
     bool continueGame = false;
-    int currentPlayer = 0;
+    int currentPlayer = 1;
     int offSetX = 0;
     int offSetY = 0;
-    const auto &shapesMap = ShapesManager::getInstance().getShapeMap();
-    Shapes xShape = shapesMap.at("X Shape");
+    const auto &shapesMap = ShapesManager::getInstance().getShapeMap();    
 
     std:: cout << "Enter amount of players (2-4): ";
     std:: cin >> playerCount;
@@ -521,7 +562,6 @@ int main() {
         player.setName(playerName);
     }
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    playervector[1].removePiece(xShape);
 
     
     while (playervector.size() > 1) {
