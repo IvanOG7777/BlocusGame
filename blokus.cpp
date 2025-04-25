@@ -465,16 +465,20 @@ class BoardGame {
             if (!hasPlacedInCorner) {
                 return false;
             }
-
+            bool seenOwnTile = false;
             for (auto &row : boardSize) { // cycle through the board to find a cell with the current players number
                 for (auto &cell : row) {
                     if (cell == currentPlayer) { // if a cell is equal to the current players number we return true meaning player has placed a piece already
                         hasPlayerPlacedPiece = true; // sets it to true, we found a piece
+                        seenOwnTile = true;
                         if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // calls the isPIeceDiagonal function forcing user to place diagonal to their own shapes
                             return false;
+                        break;
                         }
-                        break; // break out of this loop
                     }
+                }
+                if (seenOwnTile) {
+                    break;
                 }
             }
             
@@ -544,7 +548,6 @@ int main() {
     bool hasPickedPiece = false;
     bool hasPlacedPiece = false;
     bool continueGame = false;
-    int currentPlayer = 1;
     int offSetX = 0;
     int offSetY = 0;
     const auto &shapesMap = ShapesManager::getInstance().getShapeMap();    
@@ -575,6 +578,7 @@ int main() {
             std:: string pieceName;
             Shapes choosenShape;
             int options;
+            auto &avaliableShapes = playervector[current].personalShapes;
 
             while (!hasPickedPiece) {
                 std:: cout << playervector[current].getName() << std:: endl;
@@ -596,14 +600,19 @@ int main() {
                     std:: cout << "Enter to place piece" << std:: endl;
                 } else if (options == 3) {
                     do {
-                        std:: cout << playervector[current].getName() << ", type piece name: ";
-                        std:: getline(std:: cin, pieceName);
-                        choosenShape = shapesMap.at(pieceName);
+                        avaliableShapes = playervector[current].personalShapes;
+                        do {
+                            std:: cout << playervector[current].getName() << ", type piece name: ";
+                            std:: getline(std:: cin, pieceName);
 
-                        if (shapesMap.find(pieceName) == shapesMap.end()) {
-                            std:: cerr << "Piece doesnt exist or was misspelled. Try again" << std:: endl;
-                            continue;
-                        }
+                            if (avaliableShapes.find(pieceName) == avaliableShapes.end()) {
+                                std:: cerr << "You have used this piece already, Try again" << std:: endl;
+                                continue;
+                            }
+
+                        } while (avaliableShapes.find(pieceName) == avaliableShapes.end());
+
+                        choosenShape = avaliableShapes.at(pieceName);
 
                         if (!playervector[current].findSpecificPiece(choosenShape)) {
                             std:: cerr << "You have used this piece already, Try again" << std:: endl;
@@ -642,7 +651,7 @@ int main() {
                     if (board.placePiece(choosenShape, offSetX, offSetY, current+1)) {
                         hasPlacedPiece = true;
                     // Remove the piece from the player's personalShapes:
-                        playervector[current].removePiece(choosenShape);
+                        playervector[current].personalShapes.erase(pieceName);
                     } else {
                         std:: cout << "Invalid placement. Try again." << std:: endl;
                     }
