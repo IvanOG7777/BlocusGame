@@ -446,39 +446,37 @@ class BoardGame {
                 }
             }
 
-            bool hasPlayerPlacedPiece = false; // bool for first loop through game to see if the player has already placed a piece
-            bool hasPlacedInCorner = false; // bool to chekc if the player has placed in the corner of the map
-
-            for (const auto &pair : shapesCoordinates) { // for loop to cycle through the shpapes absolute coordinates
-                int x = pair.first; // sets the x value of the current pair
-                int y = pair.second; // sets the y value of the current pair
-
-                if ((x == 0 && y == 0) || // if x and y == the top left corner
-                    (x == columns - 1 && y == 0) || // if x and y == the top right corner
-                    (x == 0 && y == rows - 1) || // if x and y == the bottom left corner
-                    (x == columns - 1 && y == rows - 1)) { // if x and y == the bottom right corner
-                        hasPlacedInCorner = true; // if any condition above is true we have placed in the corner
+            bool foundOwnTile = false;
+            for (int y = 0; y < rows; ++y) {
+                for (int x = 0; x < columns; ++x) {
+                    if (boardSize[y][x] == currentPlayer) {
+                        foundOwnTile = true;
                         break;
-                    }
-            }
-
-            if (!hasPlacedInCorner) {
-                return false;
-            }
-            bool seenOwnTile = false;
-            for (auto &row : boardSize) { // cycle through the board to find a cell with the current players number
-                for (auto &cell : row) {
-                    if (cell == currentPlayer) { // if a cell is equal to the current players number we return true meaning player has placed a piece already
-                        hasPlayerPlacedPiece = true; // sets it to true, we found a piece
-                        seenOwnTile = true;
-                        if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // calls the isPIeceDiagonal function forcing user to place diagonal to their own shapes
-                            return false;
-                        break;
-                        }
                     }
                 }
-                if (seenOwnTile) {
-                    break;
+                if (foundOwnTile) break;
+            }
+
+            if (!foundOwnTile) {
+                bool inCorner = false;
+                for (auto &pair : shapesCoordinates) {
+                    int x = pair.first;
+                    int y = pair.second;
+                    if ((x == 0 && y == 0) ||
+                        (x == columns - 1 && y == 0) ||
+                        (x == 0 && y == rows - 1) ||
+                        (x == columns - 1 && rows - 1)) {
+                            inCorner = true;
+                            break;
+                        }
+                }
+                if (!inCorner) {
+                    std:: cerr << "First piece MUST be in a corner" << std:: endl;
+                    return false;
+                }
+            } else {
+                if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) {
+                    return false;
                 }
             }
             
