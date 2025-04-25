@@ -446,36 +446,36 @@ class BoardGame {
                 }
             }
 
-            bool foundOwnTile = false;
-            for (int y = 0; y < rows; ++y) {
+            bool foundOwnTile = false; // bool used to find a tile
+            for (int y = 0; y < rows; ++y) { // nested for loop to loop through map
                 for (int x = 0; x < columns; ++x) {
-                    if (boardSize[y][x] == currentPlayer) {
-                        foundOwnTile = true;
-                        break;
+                    if (boardSize[y][x] == currentPlayer) { // if at x,y we find a number = to the the current player we found a tile on the map
+                        foundOwnTile = true; // change to true
+                        break; // and break out of this if statment
                     }
                 }
-                if (foundOwnTile) break;
+                if (foundOwnTile) break; // if true break of the nested for loop
             }
 
-            if (!foundOwnTile) {
-                bool inCorner = false;
-                for (auto &pair : shapesCoordinates) {
+            if (!foundOwnTile) { // if its not found
+                bool inCorner = false; // bool to find if placemnt is in the corner
+                for (auto &pair : shapesCoordinates) { // for each loop to cycle through all the shapes pairs
                     int x = pair.first;
                     int y = pair.second;
-                    if ((x == 0 && y == 0) ||
-                        (x == columns - 1 && y == 0) ||
-                        (x == 0 && y == rows - 1) ||
-                        (x == columns - 1 && rows - 1)) {
-                            inCorner = true;
-                            break;
+                    if ((x == 0 && y == 0) || // top left corner
+                        (x == columns - 1 && y == 0) || // top right corner
+                        (x == 0 && y == rows - 1) || //bottom left corner
+                        (x == columns - 1 && rows - 1)) { //bottom corner corner
+                            inCorner = true; // if any condition above is true we set isCorner to true
+                            break; // break out of this if statment
                         }
                 }
-                if (!inCorner) {
+                if (!inCorner) { // if not true 
                     std:: cerr << "First piece MUST be in a corner" << std:: endl;
-                    return false;
+                    return false; // we return false, player must try again
                 }
-            } else {
-                if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) {
+            } else { // Once we finish all of the above contitions, it means we have either placed in the corner or already ahve a piece on the map
+                if (!isPieceDiagonal(shape, xCoordinate, yCoordinate, currentPlayer)) { // we then do the diagonal check for a piece already on the map
                     return false;
                 }
             }
