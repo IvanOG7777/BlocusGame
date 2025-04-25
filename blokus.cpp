@@ -462,6 +462,10 @@ class BoardGame {
                     }
             }
 
+            if (!hasPlacedInCorner) {
+                return false;
+            }
+
             for (auto &row : boardSize) { // cycle through the board to find a cell with the current players number
                 for (auto &cell : row) {
                     if (cell == currentPlayer) { // if a cell is equal to the current players number we return true meaning player has placed a piece already
