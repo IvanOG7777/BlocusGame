@@ -494,7 +494,6 @@ class BoardGame {
 class Player {
     public:
         std:: string playerName;
-        int playerPoints = 0;
 
         std:: map<std:: string, Shapes> personalShapes = Shapes::initailizeShapes();
 
@@ -523,12 +522,7 @@ class Player {
             }
             return false;
         }
-
-        int piecesPlaced = 0;
-
-        bool isFirstMove() const { return piecesPlaced == 0;}
-        void notePLaced() {++piecesPlaced;}
-
+        
         void setName(std:: string passedName) {
             playerName = passedName;
         }
@@ -596,6 +590,7 @@ int main() {
                     std:: cout << "H/h flip horizontal" << std:: endl;
                     std:: cout << "V/v flip vertical" << std:: endl;
                     std:: cout << "Enter to place piece" << std:: endl;
+                    std:: cout << "Q/q to quit the game" << std:: endl;
                 } else if (options == 3) {
                     do {
                         avaliableShapes = playervector[current].personalShapes;
