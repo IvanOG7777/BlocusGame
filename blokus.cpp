@@ -657,18 +657,21 @@ int main() {
                     std:: cout << "Invalid placement. Try again." << std:: endl;
                 }
             } else if (ch == 'Q' || ch == 'q') {
+                quitPlayers.push_back(currentPlayer);
                 activePlayers.erase(activePlayers.begin() + currentPlayerIndex);
                 hasPlacedPiece = true;
                 playerQuit = true;
+                
+                if (currentPlayerIndex >= activePlayers.size()) {
+                    currentPlayerIndex = 0;
+                }
                 break;
             }
         } if (playerQuit) {
             continue;
         }
 
-        if (!activePlayers.empty()) {
-            currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
-        }
+        currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
     }
 
     if (activePlayers.size() == 1) {
