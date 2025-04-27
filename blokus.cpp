@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iterator>
 #include <string>
 #include <utility>
 #include <vector>
@@ -576,7 +575,7 @@ int main() {
         playerQuit = false;
         std:: string pieceName;
         Shapes chosenShape;
-        int options;
+        std:: string options;
         auto &availableShapes = currentPlayer.personalShapes;
 
         while (!hasPickedPiece) {
@@ -587,10 +586,10 @@ int main() {
             std:: cin >> options;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-            if (options == 1) {
+            if (options == "1") {
                 std:: cout << "You have the current pieces:" << std:: endl;
                 currentPlayer.availablePieces();
-            } else if (options == 2) {
+            } else if (options == "2") {
                 std:: cout << "Controls:" << std:: endl;
                 std:: cout << "Arrow keys - move shape" << std:: endl;
                 std:: cout << "R/r rotate 90°" << std:: endl;
@@ -598,7 +597,7 @@ int main() {
                 std:: cout << "V/v flip vertical" << std:: endl;
                 std:: cout << "Enter to place piece" << std:: endl;
                 std:: cout << "Q/q to quit the game" << std:: endl;
-            } else if (options == 3) {
+            } else if (options == "3") {
                 do{
                     availableShapes = currentPlayer.personalShapes;
                     do {
@@ -621,9 +620,16 @@ int main() {
                     hasPickedPiece = true;
 
                 } while (!hasPickedPiece);
+            } else if (options == "Q" || options == "q") {
+                quitPlayers.push_back(currentPlayer);
+                activePlayers.erase(activePlayers.begin() + currentPlayerIndex);
+                hasPlacedPiece = true;
+                playerQuit = true;
+                break;
             } else {
-                std:: cerr << "Please enter 1, 2, or 3" << std:: endl;
+                std:: cerr << "Please enter 1, 2, 3, or Q/q" << std:: endl;
             }
+            currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
         }
 
         int offSetX = 0;
@@ -656,22 +662,8 @@ int main() {
                 } else {
                     std:: cout << "Invalid placement. Try again." << std:: endl;
                 }
-            } else if (ch == 'Q' || ch == 'q') {
-                quitPlayers.push_back(currentPlayer);
-                activePlayers.erase(activePlayers.begin() + currentPlayerIndex);
-                hasPlacedPiece = true;
-                playerQuit = true;
-                
-                if (currentPlayerIndex >= activePlayers.size()) {
-                    currentPlayerIndex = 0;
-                }
-                break;
             }
-        } if (playerQuit) {
-            continue;
         }
-
-        currentPlayerIndex = (currentPlayerIndex + 1) % activePlayers.size();
     }
 
     if (activePlayers.size() == 1) {
