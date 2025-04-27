@@ -492,6 +492,8 @@ class BoardGame {
 };
 
 class Player {
+    private:
+        int playerID;
     public:
         std:: string playerName;
 
@@ -521,6 +523,14 @@ class Player {
                 return true;
             }
             return false;
+        }
+
+        void setPlayerID(int id) {
+            playerID = id;
+        }
+
+        int getPlayerID() const {
+            return playerID;
         }
         
         void setName(std:: string passedName) {
@@ -555,14 +565,16 @@ int main() {
         std:: cout << "Enter amount of players (2-4): ";
         std:: cin >> playerCount;
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     activePlayers.resize(playerCount);
 
-    for (auto &player : activePlayers) {
+    for (int i = 0; i < activePlayers.size(); i++) {
         std:: string playerName;
         std:: cout << "Enter Name: ";
-        std:: cin >> playerName;
-        player.setName(playerName);
+        std:: getline(std:: cin, playerName);
+        activePlayers[i].setName(playerName);
+        activePlayers[i].setPlayerID(i + 1);
     }
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -635,7 +647,7 @@ int main() {
         int offSetX = 0;
         int offSetY = 0;
         while (!hasPlacedPiece) {
-            board.printMapDynamically(board.boardSize, chosenShape, offSetX, offSetY, currentPlayerIndex + 1);
+            board.printMapDynamically(board.boardSize, chosenShape, offSetX, offSetY, currentPlayer.getPlayerID());
 
             int ch = _getch();
 
@@ -655,7 +667,7 @@ int main() {
             } else if (ch == 'V' || ch =='v') {
                 chosenShape = chosenShape.flipShapeVertical();
             } else if (ch == 13) {
-                if (board.placePiece(chosenShape, offSetX, offSetY, currentPlayerIndex + 1)) {
+                if (board.placePiece(chosenShape, offSetX, offSetY, currentPlayer.getPlayerID())) {
                     hasPlacedPiece = true;
 
                     currentPlayer.personalShapes.erase(pieceName);
