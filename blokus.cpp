@@ -9,6 +9,13 @@
 #undef max
 #undef min
 
+//-------------------------------------------------------------------------------
+//Created by Ivan on spring break 2025. Finished 4/27/25
+//Game should run fine, really havent checked for edge cases that handle errors
+//Had a lot of fun creating this game hopfully the code is readable becasue I will be
+//forgetting what most of this stuff does within a month or so
+//-------------------------------------------------------------------------------
+
 class Shapes { // class Shapes
     public:
         std:: string name; // enter shapes name
